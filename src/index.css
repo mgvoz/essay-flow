@@ -1,13 +1,345 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
+
+:root {
+	--primary-green: #2dac6d;
+	--primary-light: #f8f9fa;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+	font-family: 'Lora', sans-serif;
+}
+
+.page-container {
+	position: relative;
+	min-height: 95vh;
+	margin-bottom: 0;
+}
+
+/*NAVBAR*/
+.logo {
+	width: 6rem;
+}
+
+.navbar-nav > a {
+	font-size: 18px;
+	font-family: 'Lora', sans-serif;
+	margin-right: 0.75rem;
+	margin-left: 0.75rem;
+	border-bottom: 0.1875rem solid var(--primary-light);
+}
+
+.navbar-nav > a.active,
+.navbar-nav > a:focus {
+	border-bottom: 0.1875rem solid var(--primary-green);
+}
+
+/*FOOTER*/
+.footer {
+	background-color: var(--primary-light);
+	height: 4rem;
+	bottom: 0;
+	width: 100%;
+	position: relative;
+}
+
+.footer > p {
+	text-align: center;
+	padding: 1.4rem 0;
+	font-family: 'Lora', sans-serif;
+	color: #7c7c7d;
+}
+
+/*LOGIN*/
+
+.main-title {
+	font-family: 'Lora', sans-serif;
+	color: var(--primary-green);
+	margin-top: 3rem;
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+.main-description {
+	font-family: 'Lora', sans-serif;
+	margin-bottom: 2rem;
+	width: 50vw;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.login-container {
+	font-family: 'Lora', sans-serif;
+	margin-top: 25px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+}
+
+.login-container > h2 {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.signup-link,
+.forgot-link {
+	color: var(--primary-green) !important;
+}
+
+.login-links {
+	margin-top: 2rem;
+}
+
+/*SIGN UP*/
+
+.signup-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 50vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.signup-heading {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.btn {
+	margin-top: 1.5rem;
+	border: 0.135rem var(--primary-green) solid !important;
+	border-radius: 0% !important;
+	background-color: transparent !important;
+	color: black !important;
+}
+
+/*FORGOT*/
+.forgot-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 50vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.forgot-heading {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+/*DASHBOARD*/
+
+.dashboard-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 90vw;
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.dashboard-container > h1 {
+	margin-bottom: 1rem;
+}
+
+#dash-row {
+	padding: 1rem;
+}
+
+#dash-col {
+	border: var(--primary-green) solid 0.135rem;
+	height: 15rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+#dash-col > h5 {
+	margin-top: 0.8rem;
+}
+
+/*UPLOAD*/
+.upload-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 50vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.upload-heading {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.multiple-upload {
+	margin-top: 2rem;
+}
+
+.upload-drop-zone {
+	height: 200px;
+	border-width: 2px;
+	margin-bottom: 20px;
+}
+
+.upload-drop-zone {
+	color: #ccc;
+	border-style: dashed;
+	border-color: #ccc;
+	line-height: 200px;
+	text-align: center;
+}
+.upload-drop-zone.drop {
+	color: #222;
+	border-color: #222;
+}
+
+#js-upload-submit {
+	margin-top: 1.2rem;
+	margin-bottom: 1rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.upload-desc {
+	margin-top: 1rem;
+	text-align: center;
+}
+
+/*LIBRARY*/
+
+.library-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 70vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.library-container > h1 {
+	margin-bottom: 3rem;
+}
+
+.library-container > h4 {
+	margin-bottom: 1rem;
+	margin-top: 2rem;
+}
+
+.file-head {
+	text-align: center;
+}
+
+.filename {
+	text-align: center;
+}
+
+/*VIEW
+.view-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 70vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.view-top-text {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.viewer-link {
+	color: var(--primary-green);
+}
+
+.file-viewer {
+	margin-left: auto;
+	margin-right: auto;
+}*/
+
+/*GRADE*/
+
+#view-col.col-8 {
+	border-right: var(--primary-green) solid 0.135rem;
+	height: 90vh;
+}
+
+#grade-col.col-4 {
+	height: 90vh;
+}
+
+#grader.container-fluid {
+	margin-bottom: 2rem;
+}
+
+.grader-title {
+	text-align: center;
+	margin-top: 25px;
+	margin-bottom: 2rem;
+	font-family: 'Lora', sans-serif;
+}
+
+.viewer-title {
+	text-align: center;
+	font-family: 'Lora', sans-serif;
+	background-color: var(--primary-green);
+	color: var(--primary-light);
+}
+
+.rubric-title {
+	text-align: center;
+	font-family: 'Lora', sans-serif;
+	background-color: var(--primary-green);
+	color: var(--primary-light);
+}
+
+.grade-frame {
+	width: 100%;
+	height: inherit;
+	border: solid 0.135rem var(--primary-light);
+}
+
+/*CREATE*/
+
+.rubric-container {
+	margin-top: 25px;
+	font-family: 'Lora', sans-serif;
+	width: 90vw;
+	border: 0.135rem solid var(--primary-green);
+	padding: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.rubric-container > h1 {
+	margin-bottom: 2rem;
+}
+
+#rubric-btn {
+	margin-top: 1rem;
+	margin-bottom: 2rem;
+}
+
+.rubric-title2 {
+	text-align: center;
+	font-family: 'Lora', sans-serif;
+	background-color: var(--primary-green);
+	color: var(--primary-light);
+	margin-top: 3rem;
+	padding: 1rem;
+}
+
+.table-container {
+	max-width: 90vw;
 }
