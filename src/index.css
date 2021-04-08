@@ -28,9 +28,24 @@ body {
 	border-bottom: 0.1875rem solid var(--primary-light);
 }
 
+.navbar-text {
+	font-size: 18px;
+	font-family: 'Lora', sans-serif;
+	margin-right: 1rem;
+	margin-left: 0.75rem;
+	color: #7c7c7d;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
 .navbar-nav > a.active,
 .navbar-nav > a:focus {
 	border-bottom: 0.1875rem solid var(--primary-green);
+}
+
+#logout-button {
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
 /*FOOTER*/
@@ -49,7 +64,15 @@ body {
 	color: #7c7c7d;
 }
 
-/*LOGIN*/
+/*HOME*/
+
+.home-logo {
+	display: block;
+	width: 90vw;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 3rem;
+}
 
 .main-title {
 	font-family: 'Lora', sans-serif;
@@ -67,6 +90,8 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+/*LOGIN*/
 
 .login-container {
 	font-family: 'Lora', sans-serif;
@@ -164,6 +189,11 @@ body {
 	margin-top: 0.8rem;
 }
 
+.dash-stat {
+	font-size: 30px;
+	padding-top: 20%;
+}
+
 /*UPLOAD*/
 .upload-container {
 	margin-top: 25px;
@@ -236,11 +266,18 @@ body {
 }
 
 .file-head {
-	text-align: center;
+	text-align: left;
 }
 
 .filename {
-	text-align: center;
+	text-align: left;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#view-edit-btn {
+	margin-top: 0px;
+	margin-left: 3px;
 }
 
 /*VIEW

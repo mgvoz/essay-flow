@@ -1,9 +1,32 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000/users';
+const API = axios.create({ baseURL: 'http://localhost:5000' });
+API.interceptors.request.use((req) => {
+	if (localStorage.getItem('profile')) {
+		req.headers.Authorization = `Bearer ${
+			JSON.parse(localStorage.getItem('profile')).token
+		}`;
+	}
+	return req;
+});
 
-export const fetchUsers = () => axios.get(url);
+export const signIn = (userData) => API.post('/user/signin', userData);
+export const signUp = (userData) => API.post('/user/signup', userData);
 
-export const createUser = (newUser) => axios.post(url, newUser);
+export const getRubrics = () => API.get('/rubrics');
 
-export const createRubric = (newRubric) => axios.patch(url, newRubric);
+export const createRubric = (newRubric) => API.post('/rubrics', newRubric);
+
+export const updateRubric = (id, updatedRubric) =>
+	API.patch(`/rubrics/${id}`, updatedRubric);
+
+export const deleteRubric = (id) => API.delete(`/rubrics/${id}`);
+
+export const getFiles = () => API.get('/files');
+
+export const addFile = (newFile) => API.post('/files', newFile);
+
+export const updateFile = (id, updatedFile) =>
+	API.patch(`/files/${id}`, updatedFile);
+
+export const deleteFile = (id) => API.delete(`/files/${id}`);

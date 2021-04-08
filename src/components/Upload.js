@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function Upload() {
+	const user = JSON.parse(localStorage.getItem('profile'));
+	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
+	const [fileData, setFileData] = useState([
+		{
+			filename: 'Filename',
+			currentGrade: 'Not yet graded.',
+			notes: '',
+		},
+	]);
+
 	return (
 		<div className='page-container'>
 			<div className='upload-container'>
@@ -16,7 +26,7 @@ function Upload() {
 						/>
 						<label
 							className='custom-file-label'
-							for='inputGroupFile02'
+							htmlFor='inputGroupFile02'
 						>
 							Choose file
 						</label>
@@ -33,7 +43,7 @@ function Upload() {
 							<form
 								action=''
 								method='post'
-								enctype='multipart/form-data'
+								encType='multipart/form-data'
 								id='js-upload-form'
 							></form>
 							<h4 className='multiple-heading'>

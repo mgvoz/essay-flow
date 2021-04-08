@@ -1,39 +1,53 @@
-import React, { Fragment, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { createRubric } from '../actions/users';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createRubric, updateRubric } from '../actions/rubrics';
 
-function CreateRubric({ currentUser }) {
+function CreateRubric({ currentId, setCurrentId }) {
 	const dispatch = useDispatch();
+	const user = JSON.parse(localStorage.getItem('profile'));
+
+	const [rubricData, setRubricData] = useState({
+		title: '',
+		columnHeads: [],
+		rowHeads: [],
+		cells: [],
+	});
+
+	const clear = () => {
+		setCurrentId(0);
+		setRubricData({ title: '', columnHeads: [], rowHeads: [], cells: [] });
+	};
 
 	const rubricCells = [];
 
-	const [addRubric, setAddRubric] = useState([
-		{
-			dateCreated: new Date(),
-			title: 'Title',
-			columns: [],
-			rows: [],
-			desc: [],
-		},
-	]);
-
-	var cells = document.getElementsByName('desc');
+	var cellData = document.getElementsByName('desc');
 	const data = () => {
-		cells.forEach((cell) => {
+		cellData.forEach((cell) => {
 			rubricCells.push(cell.value);
 		});
 	};
 
-	//this function will eventually save rubric to DB
-	const handleSave = (e) => {
+	const handleSave = async (e) => {
 		e.preventDefault();
-		data();
-		console.log(rubricCells);
-		setAddRubric({ ...addRubric, desc: rubricCells });
-		//dispatch(createRubric(addRubric));
+		await data();
+		if (currentId === 0) {
+			dispatch(createRubric({ ...rubricData, name: user?.result?.name }));
+			clear();
+			alert('Rubric added successfully and is viewable in your Library!');
+		} else {
+			dispatch(
+				updateRubric(currentId, {
+					...rubricData,
+					name: user?.result?.name,
+				}),
+			);
+			clear();
+		}
 	};
 
-	console.log(addRubric);
+	console.log(user);
+	console.log(rubricData);
+
 	return (
 		<div className='page-container'>
 			<div className='rubric-container'>
@@ -45,10 +59,10 @@ function CreateRubric({ currentUser }) {
 							type='text'
 							className='form-control'
 							placeholder='Research Paper Assignment'
-							value={addRubric.title}
+							value={rubricData.title}
 							onChange={(e) =>
-								setAddRubric({
-									...addRubric,
+								setRubricData({
+									...rubricData,
 									title: e.target.value,
 								})
 							}
@@ -64,11 +78,11 @@ function CreateRubric({ currentUser }) {
 							className='form-control'
 							placeholder='10pts., 20pts.'
 							maxLength='25'
-							value={addRubric.columns}
+							value={rubricData.columns}
 							onChange={(e) =>
-								setAddRubric({
-									...addRubric,
-									columns: e.target.value.split(','),
+								setRubricData({
+									...rubricData,
+									columnHeads: e.target.value.split(','),
 								})
 							}
 						></input>
@@ -83,11 +97,11 @@ function CreateRubric({ currentUser }) {
 							type='text'
 							className='form-control'
 							placeholder='Accuracy, Organization, Conventions'
-							value={addRubric.rows}
+							value={rubricData.rows}
 							onChange={(e) =>
-								setAddRubric({
-									...addRubric,
-									rows: e.target.value.split(','),
+								setRubricData({
+									...rubricData,
+									rowHeads: e.target.value.split(','),
 								})
 							}
 						></input>
@@ -95,32 +109,36 @@ function CreateRubric({ currentUser }) {
 				</form>
 				<hr />
 				<div className='table-container'>
-					{addRubric === true ? ( //change this line if shows undefined, hope this will be resolved once login is implemented
+					{rubricData !== true ? ( //change this line if shows undefined
 						<>
-							<h4 className='rubric-title2'>{addRubric.title}</h4>
+							<h4 className='rubric-title2'>
+								{rubricData.title}
+							</h4>
 							<table className='table'>
 								<thead className='thead-light'>
 									<tr>
 										<th className='rubric-heading'></th>
-										{addRubric.columns.map((col, key) => {
-											return (
-												<th
-													className='rubric-heading'
-													key={key}
-													scope='col'
-												>
-													{col}
-												</th>
-											);
-										})}
+										{rubricData.columnHeads.map(
+											(col, key) => {
+												return (
+													<th
+														className='rubric-heading'
+														key={key}
+														scope='col'
+													>
+														{col}
+													</th>
+												);
+											},
+										)}
 									</tr>
 								</thead>
 								<tbody>
-									{addRubric.rows.map((row, key) => {
+									{rubricData.rowHeads.map((row, key) => {
 										return (
 											<tr key={key}>
 												<th scope='row'>{row}</th>
-												{addRubric.columns.map(
+												{rubricData.columnHeads.map(
 													(col, key) => {
 														return (
 															<td
@@ -132,7 +150,7 @@ function CreateRubric({ currentUser }) {
 																	id='desc'
 																	cols='auto'
 																	rows='auto'
-																	maxLength='150'
+																	maxLength='300'
 																	placeholder='Click here to add description'
 																></textarea>
 															</td>

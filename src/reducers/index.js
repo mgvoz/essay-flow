@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
-import users from './users';
+import rubrics from './rubrics';
+import auth from './auth';
+import files from './files';
 
 export default combineReducers({
-	users,
+	rubrics,
+	auth,
+	files,
 });
