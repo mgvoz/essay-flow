@@ -12,7 +12,6 @@ import Home from './components/Home.js';
 import Footer from './components/Footer.js';
 import Forgot from './components/Forgot.js';
 import Auth from './components/Auth.js';
-import ViewEditRubric from './components/ViewEditRubric.js';
 import CreateRubric from './components/CreateRubric.js';
 import { getRubrics } from './actions/rubrics';
 import { getFiles } from './actions/files';
@@ -20,18 +19,18 @@ import { getFiles } from './actions/files';
 const App = () => {
 	const dispatch = useDispatch();
 	const rubrics = useSelector((state) => state.rubrics);
-	console.log(rubrics);
 	const files = useSelector((state) => state.files);
-	console.log(files);
-	const [currentId, setCurrentId] = useState(0);
+
+	const [currentRubricId, setCurrentRubricId] = useState(0);
+	const [currentFileId, setCurrentFileId] = useState(0);
 
 	useEffect(() => {
 		dispatch(getRubrics());
-	}, [currentId, dispatch]);
+	}, [currentRubricId, dispatch]);
 
 	useEffect(() => {
 		dispatch(getFiles());
-	}, [currentId, dispatch]);
+	}, [currentFileId, dispatch]);
 
 	return (
 		<>
@@ -53,20 +52,31 @@ const App = () => {
 					<Route exact path='/upload'>
 						<Upload />
 					</Route>
-					<Route exact path='/create-rubric/*'>
+					<Route exact path='/create-edit-rubric/*'>
 						<CreateRubric
-							currentId={currentId}
-							setCurrentId={setCurrentId}
+							currentRubricId={currentRubricId}
+							setCurrentRubricId={setCurrentRubricId}
 						/>
 					</Route>
-					<Route exact path='/view-edit-rubric'>
-						<ViewEditRubric rubrics={rubrics} />
-					</Route>
 					<Route exact path='/library'>
-						<Library rubrics={rubrics} files={files} />
+						<Library
+							currentRubricId={currentRubricId}
+							setCurrentRubricId={setCurrentRubricId}
+							currentFileId={currentFileId}
+							setCurrentFileId={setCurrentFileId}
+							rubrics={rubrics}
+							files={files}
+						/>
 					</Route>
-					<Route exact path='/grade/*'>
-						<Grade rubrics={rubrics} files={files} />
+					<Route exact path='/grade'>
+						<Grade
+							currentRubricId={currentRubricId}
+							setCurrentRubricId={setCurrentRubricId}
+							currentFileId={currentFileId}
+							setCurrentFileId={setCurrentFileId}
+							rubrics={rubrics}
+							files={files}
+						/>
 					</Route>
 				</Switch>
 				<Footer />
@@ -76,3 +86,11 @@ const App = () => {
 };
 
 export default App;
+
+/*<Route path='/view-edit-rubric'>
+						<ViewEditRubric
+							currentRubricId={currentRubricId}
+							setCurrentRubricId={setCurrentRubricId}
+							rubrics={rubrics}
+						/>
+					</Route>*/

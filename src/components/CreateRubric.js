@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createRubric, updateRubric } from '../actions/rubrics';
+import { useHistory } from 'react-router-dom';
 
-function CreateRubric({ currentId, setCurrentId }) {
+function CreateRubric({ currentRubricId, setCurrentRubricId }) {
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const user = JSON.parse(localStorage.getItem('profile'));
+	const currentRubric = useSelector((state) =>
+		currentRubricId
+			? state.rubrics.find((r) => r._id === currentRubricId)
+			: null,
+	);
 
 	const [rubricData, setRubricData] = useState({
 		title: '',
@@ -13,52 +20,75 @@ function CreateRubric({ currentId, setCurrentId }) {
 		cells: [],
 	});
 
-	const clear = () => {
-		setCurrentId(0);
-		setRubricData({ title: '', columnHeads: [], rowHeads: [], cells: [] });
+	let index = -1;
+
+	useEffect(() => {
+		if (currentRubric) setRubricData(currentRubric);
+	}, [currentRubric]);
+
+	const handleBack = () => {
+		setCurrentRubricId(0);
+		history.push('/library');
 	};
 
 	const rubricCells = [];
-
 	var cellData = document.getElementsByName('desc');
+
 	const data = () => {
 		cellData.forEach((cell) => {
 			rubricCells.push(cell.value);
 		});
+		setRubricData({ ...rubricData, cells: rubricCells });
+		console.log(rubricData);
 	};
 
-	const handleSave = async (e) => {
+	const handleSave = (e) => {
 		e.preventDefault();
-		await data();
-		if (currentId === 0) {
+		if (currentRubricId === 0) {
 			dispatch(createRubric({ ...rubricData, name: user?.result?.name }));
-			clear();
-			alert('Rubric added successfully and is viewable in your Library!');
+			setCurrentRubricId(0);
+			setRubricData({
+				title: '',
+				columnHeads: [],
+				rowHeads: [],
+				cells: [],
+			});
+			alert('Rubric added successfully!');
+			history.push('/library');
 		} else {
 			dispatch(
-				updateRubric(currentId, {
+				updateRubric(currentRubricId, {
 					...rubricData,
 					name: user?.result?.name,
 				}),
 			);
-			clear();
+			setCurrentRubricId(0);
+			setRubricData({
+				title: '',
+				columnHeads: [],
+				rowHeads: [],
+				cells: [],
+			});
+			alert('Rubric updated successfully!');
+			history.push('/library');
 		}
 	};
-
-	console.log(user);
-	console.log(rubricData);
 
 	return (
 		<div className='page-container'>
 			<div className='rubric-container'>
-				<h1>Create New Rubric</h1>
+				<h1>Create/Edit Rubric</h1>
 				<form>
 					<div className='form-group'>
 						<label htmlFor='rubric-title'>Rubric Title</label>
 						<input
 							type='text'
 							className='form-control'
-							placeholder='Research Paper Assignment'
+							placeholder={
+								currentRubricId === 0
+									? 'Research Paper Assignment'
+									: null
+							}
 							value={rubricData.title}
 							onChange={(e) =>
 								setRubricData({
@@ -71,14 +101,16 @@ function CreateRubric({ currentId, setCurrentId }) {
 					<div className='form-group'>
 						<label htmlFor='rubric-cols'>
 							Let's set up the columns for your rubric. Enter
-							point values separated by commas (6 maximum):
+							point values separated by commas:
 						</label>
 						<input
 							type='text'
 							className='form-control'
-							placeholder='10pts., 20pts.'
+							placeholder={
+								currentRubricId === 0 ? '10pts., 20pts.' : null
+							}
 							maxLength='25'
-							value={rubricData.columns}
+							value={rubricData.columnHeads}
 							onChange={(e) =>
 								setRubricData({
 									...rubricData,
@@ -96,8 +128,12 @@ function CreateRubric({ currentId, setCurrentId }) {
 						<input
 							type='text'
 							className='form-control'
-							placeholder='Accuracy, Organization, Conventions'
-							value={rubricData.rows}
+							placeholder={
+								currentRubricId === 0
+									? 'Accuracy, Organization, Conventions'
+									: null
+							}
+							value={rubricData.rowHeads}
 							onChange={(e) =>
 								setRubricData({
 									...rubricData,
@@ -109,59 +145,77 @@ function CreateRubric({ currentId, setCurrentId }) {
 				</form>
 				<hr />
 				<div className='table-container'>
-					{rubricData !== true ? ( //change this line if shows undefined
+					{rubricData !== true ? (
 						<>
 							<h4 className='rubric-title2'>
 								{rubricData.title}
 							</h4>
-							<table className='table'>
-								<thead className='thead-light'>
-									<tr>
-										<th className='rubric-heading'></th>
-										{rubricData.columnHeads.map(
-											(col, key) => {
-												return (
+							<div className='table-responsive'>
+								<table className='table table-bordered'>
+									<thead className='thead-light'>
+										<tr>
+											<th className='rubric-heading'></th>
+											{rubricData.columnHeads.map(
+												(col, key) => {
+													return (
+														<th
+															className='rubric-heading'
+															key={key}
+															scope='col'
+														>
+															{col}
+														</th>
+													);
+												},
+											)}
+										</tr>
+									</thead>
+									<tbody>
+										{rubricData.rowHeads.map((row, key) => {
+											return (
+												<tr key={key}>
 													<th
 														className='rubric-heading'
-														key={key}
-														scope='col'
+														scope='row'
 													>
-														{col}
+														{row}
 													</th>
-												);
-											},
-										)}
-									</tr>
-								</thead>
-								<tbody>
-									{rubricData.rowHeads.map((row, key) => {
-										return (
-											<tr key={key}>
-												<th scope='row'>{row}</th>
-												{rubricData.columnHeads.map(
-													(col, key) => {
-														return (
-															<td
-																key={key}
-																id='test'
-															>
-																<textarea
-																	name='desc'
-																	id='desc'
-																	cols='auto'
-																	rows='auto'
-																	maxLength='300'
-																	placeholder='Click here to add description'
-																></textarea>
-															</td>
-														);
-													},
-												)}
-											</tr>
-										);
-									})}
-								</tbody>
-							</table>
+													{rubricData.columnHeads.map(
+														(col, key) => {
+															index++;
+															return (
+																<td
+																	key={key}
+																	id='test'
+																	className='text-center'
+																>
+																	<textarea
+																		className='cells'
+																		name='desc'
+																		id='desc'
+																		cols='auto'
+																		rows='auto'
+																		placeholder='Click here to add description'
+																		value={
+																			rubricData
+																				.cells[
+																				index
+																			]
+																		}
+																		onChange={
+																			data
+																		}
+																	></textarea>
+																</td>
+															);
+														},
+													)}
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+							</div>
 							<center>
 								<button
 									onClick={handleSave}
@@ -169,9 +223,50 @@ function CreateRubric({ currentId, setCurrentId }) {
 									id='rubric-btn'
 									className='btn btn-primary'
 								>
-									Save Rubric
+									{currentRubricId === 0
+										? 'Save Rubric'
+										: 'Save Changes'}
 								</button>
 							</center>
+							{currentRubricId === 0 ? (
+								<></>
+							) : (
+								<center>
+									<button
+										onClick={handleBack}
+										type='submit'
+										id='rubric-btn'
+										className='btn btn-primary'
+									>
+										Go Back Without Saving
+									</button>
+								</center>
+							)}
+							{currentRubricId === 0 ? (
+								<></>
+							) : (
+								<center>
+									<button
+										onClick={() => {
+											setCurrentRubricId(0);
+											history.push(
+												'/create-edit-rubric/*',
+											);
+											setRubricData({
+												title: '',
+												columnHeads: [],
+												rowHeads: [],
+												cells: [],
+											});
+										}}
+										type='submit'
+										id='rubric-btn'
+										className='btn btn-primary'
+									>
+										Create New Rubric
+									</button>
+								</center>
+							)}
 						</>
 					) : (
 						<p>Fill in form above to generate table.</p>
@@ -183,3 +278,15 @@ function CreateRubric({ currentId, setCurrentId }) {
 }
 
 export default CreateRubric;
+
+/*<button
+																		onClick={
+																			saveCell
+																		}
+																		type='submit'
+																		id='cell-btn'
+																		className='btn btn-primary'
+																	>
+																		Save
+																		Description
+																	</button>*/

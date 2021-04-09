@@ -1,21 +1,111 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { addFile } from '../actions/files';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useDropzone } from 'react-dropzone';
 
 function Upload() {
+	const dispatch = useDispatch();
+	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
-	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
+
 	const [fileData, setFileData] = useState([
 		{
-			filename: 'Filename',
-			currentGrade: 'Not yet graded.',
-			notes: '',
+			name: user?.result?.name,
+			file: 'File',
+			currentGrade: '',
+			notes: [],
 		},
 	]);
+
+	const {
+		acceptedFiles,
+		fileRejections,
+		getRootProps,
+		getInputProps,
+		isDragActive,
+		isDragAccept,
+		isDragReject,
+	} = useDropzone({
+		multiple: true,
+		accept:
+			'application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx, .pages',
+	});
+
+	const fileList = [];
+	const badFileList = [];
+
+	acceptedFiles.forEach((file) => {
+		fileList.push(file);
+	});
+	fileRejections.forEach((file) => {
+		badFileList.push(file);
+	});
+
+	const handleUpload = (e) => {
+		e.preventDefault();
+		fileList.forEach((file) => {
+			setFileData({ ...fileData, file: file });
+			dispatch(addFile(fileData));
+		});
+
+		alert('File(s) uploaded successfully!');
+		history.push('/library');
+	};
+
+	console.log(fileData);
+	console.log(fileList);
+	console.log(badFileList);
 
 	return (
 		<div className='page-container'>
 			<div className='upload-container'>
 				<h1 className='upload-heading'>File Upload</h1>
-				<h4 className='single-upload'>Single file</h4>
+				<div className='upload-dropzone' {...getRootProps()}>
+					<input {...getInputProps()} />
+					<p>
+						Drag 'n' drop some files here, or click to select files.
+					</p>
+				</div>
+				<p className='file-types-text'>
+					(.pdf, .doc, .docx, .pages files only)
+				</p>
+				<div className='attached-files-container'>
+					<h5 className='file-list-heading'>Attached File(s):</h5>
+					<div className='attached-files'>
+						{fileList.map((file) => (
+							<p key={file.path}>{file.name}</p>
+						))}
+					</div>
+				</div>
+				<div className='attached-files-container'>
+					<h5 className='file-list-heading'>Rejected File(s):</h5>
+					<div className='attached-files'>
+						{badFileList.map((file) => {
+							return <p key={file.file.path}>{file.file.name}</p>;
+						})}
+					</div>
+				</div>
+				<center>
+					<button
+						type='submit'
+						className='btn btn-sm btn-primary'
+						id='js-upload-submit'
+						onClick={handleUpload}
+					>
+						Upload File(s)
+					</button>
+				</center>
+				<p className='upload-desc'>
+					All files can be found in your Library.
+				</p>
+			</div>
+		</div>
+	);
+}
+
+export default Upload;
+/*<h4 className='single-upload'>Single file</h4>
 				<div className='input-group mb-3'>
 					<div className='custom-file'>
 						<input
@@ -76,23 +166,4 @@ function Upload() {
 								</div>
 							</div>
 						</div>
-					</div>
-					<div className='form-inline'>
-						<button
-							type='submit'
-							className='btn btn-sm btn-primary'
-							id='js-upload-submit'
-						>
-							Upload files
-						</button>
-					</div>
-				</div>
-				<p className='upload-desc'>
-					All files can be found in your Library.
-				</p>
-			</div>
-		</div>
-	);
-}
-
-export default Upload;
+					</div>*/

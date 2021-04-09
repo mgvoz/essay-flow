@@ -1,20 +1,38 @@
 import React from 'react';
-import { deleteFile, deleteRubric } from '../api';
+import { deleteRubric } from '../actions/rubrics';
+import { deleteFile } from '../actions/files';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-function Library({ rubrics, files }) {
+function Library({
+	currentRubricId,
+	setCurrentRubricId,
+	currentFileId,
+	setCurrentFileId,
+	rubrics,
+	files,
+}) {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
-	console.log(user);
-	console.log(rubrics);
-	console.log(files);
 
-	const handleViewEdit = () => {
-		history.push('/view-edit-rubric');
+	const thisUsersRubrics = rubrics.filter(
+		(rubric) =>
+			user?.result?.name === rubric?.name ||
+			user?.result?.name === rubric?.name,
+	);
+
+	const thisUsersFiles = files.filter(
+		(file) =>
+			user?.result?.name === file?.name ||
+			user?.result?.name === file?.name,
+	);
+	console.log(files);
+	console.log(thisUsersFiles);
+
+	const handleGrade = () => {
+		history.push('/grade');
 	};
-	const handleGrade = () => {};
 
 	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
 
@@ -35,7 +53,7 @@ function Library({ rubrics, files }) {
 							<th className='file-head' scope='col'></th>
 						</tr>
 					</thead>
-					{rubrics.length < 1 ? (
+					{thisUsersRubrics.length < 1 ? (
 						<>
 							<tbody>
 								<tr>
@@ -49,10 +67,10 @@ function Library({ rubrics, files }) {
 							</tbody>
 						</>
 					) : (
-						rubrics.map((rubric, key) => {
+						thisUsersRubrics.map((rubric) => {
 							const date = rubric.createdAt.split('T');
 							return (
-								<tbody key={key}>
+								<tbody key={rubric._id}>
 									<tr>
 										<th className='file-head' scope='row'>
 											{date[0]}
@@ -63,21 +81,30 @@ function Library({ rubrics, files }) {
 										<td className='filename'>
 											<center>
 												<button
-													onClick={handleViewEdit}
+													onClick={() => {
+														setCurrentRubricId(
+															rubric._id,
+														);
+
+														history.push(
+															`/create-edit-rubric/${currentRubricId}`,
+														);
+													}}
 													type='submit'
 													id='view-edit-btn'
 													className='btn btn-primary'
 												>
 													View/Edit
 												</button>
+
 												<button
-													onClick={() =>
+													onClick={() => {
 														dispatch(
 															deleteRubric(
 																rubric._id,
 															),
-														)
-													}
+														);
+													}}
 													type='submit'
 													id='view-edit-btn'
 													className='btn btn-primary'
@@ -110,7 +137,7 @@ function Library({ rubrics, files }) {
 							<th className='file-head' scope='col'></th>
 						</tr>
 					</thead>
-					{files.length < 1 ? (
+					{thisUsersFiles.length < 1 ? (
 						<>
 							<tbody>
 								<tr>
@@ -124,7 +151,7 @@ function Library({ rubrics, files }) {
 							</tbody>
 						</>
 					) : (
-						files.map((file, key) => {
+						thisUsersFiles.map((file, key) => {
 							return (
 								<tbody>
 									<tr key={key}>
@@ -137,12 +164,21 @@ function Library({ rubrics, files }) {
 											</a>
 										</td>
 										<td className='filename'>
-											{file.currentGrade}
+											{file.currentGrade === ''
+												? 'Not yet graded'
+												: file.currentGrade + '%'}
 										</td>
 										<td className='file-options'>
 											<center>
 												<button
-													onClick={handleGrade}
+													onClick={() => {
+														setCurrentFileId(
+															file.id,
+														);
+														history.push(
+															`/grade/${currentFileId}`,
+														);
+													}}
 													type='submit'
 													id='view-edit-btn'
 													className='btn btn-primary'

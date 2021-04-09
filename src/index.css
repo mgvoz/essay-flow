@@ -210,30 +210,48 @@ body {
 	text-align: center;
 }
 
-.multiple-upload {
-	margin-top: 2rem;
-}
-
-.upload-drop-zone {
+.upload-dropzone {
 	height: 200px;
 	border-width: 2px;
 	margin-bottom: 20px;
-}
-
-.upload-drop-zone {
 	color: #ccc;
 	border-style: dashed;
 	border-color: #ccc;
 	line-height: 200px;
 	text-align: center;
 }
-.upload-drop-zone.drop {
-	color: #222;
-	border-color: #222;
+
+.file-list-heading {
+	color: black;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.attached-files {
+	color: var(--primary-green);
+	margin-top: 1rem;
+	margin-left: 0.5rem;
+}
+
+.attached-files-container {
+	border: solid 1px;
+	border-color: #ccc;
+	margin-top: 1rem;
+}
+
+.attached-files-container > h5 {
+	margin-top: 0.5rem;
+	margin-left: 0.5rem;
+}
+
+.file-types-text {
+	text-align: center;
+	margin-top: 0.5rem;
+	margin-bottom: 2rem;
 }
 
 #js-upload-submit {
-	margin-top: 1.2rem;
+	margin-top: 2rem;
 	margin-bottom: 1rem;
 	margin-left: auto;
 	margin-right: auto;
@@ -347,7 +365,7 @@ body {
 	border: solid 0.135rem var(--primary-light);
 }
 
-/*CREATE*/
+/*CREATE RUBRIC*/
 
 .rubric-container {
 	margin-top: 25px;
@@ -366,6 +384,21 @@ body {
 #rubric-btn {
 	margin-top: 1rem;
 	margin-bottom: 2rem;
+}
+
+#cell-btn {
+	margin-top: 0rem;
+	margin-bottom: 1rem;
+}
+
+.rubric-heading {
+	text-align: center;
+	font-weight: 900;
+}
+
+textarea {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .rubric-title2 {

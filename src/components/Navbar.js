@@ -62,7 +62,7 @@ const Navbar = () => {
 								Upload
 							</Link>
 							<Link
-								to='/create-rubric/:id'
+								to='/create-edit-rubric/*'
 								className='nav-item nav-link'
 							>
 								Rubric Builder
