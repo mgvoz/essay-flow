@@ -59,7 +59,7 @@ const Navbar = () => {
 								Dashboard
 							</Link>
 							<Link to='/upload' className='nav-item nav-link'>
-								Upload
+								Upload Essays
 							</Link>
 							<Link
 								to='/create-edit-rubric/*'
@@ -67,7 +67,7 @@ const Navbar = () => {
 							>
 								Rubric Builder
 							</Link>
-							<Link to='/library' className='nav-item nav-link'>
+							<Link to='/library/*' className='nav-item nav-link'>
 								Library
 							</Link>
 						</div>

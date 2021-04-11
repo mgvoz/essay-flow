@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { addFile } from '../actions/files';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -11,10 +11,10 @@ function Upload() {
 
 	const [fileData, setFileData] = useState([
 		{
-			name: user?.result?.name,
-			file: 'File',
-			currentGrade: '',
+			fileInfo: {},
+			currentGrade: 0,
 			notes: [],
+			student: '',
 		},
 	]);
 
@@ -23,9 +23,6 @@ function Upload() {
 		fileRejections,
 		getRootProps,
 		getInputProps,
-		isDragActive,
-		isDragAccept,
-		isDragReject,
 	} = useDropzone({
 		multiple: true,
 		accept:
@@ -45,17 +42,17 @@ function Upload() {
 	const handleUpload = (e) => {
 		e.preventDefault();
 		fileList.forEach((file) => {
-			setFileData({ ...fileData, file: file });
-			dispatch(addFile(fileData));
+			setFileData({
+				...fileData,
+				fileInfo: file,
+			});
+			console.log(fileData);
+			dispatch(addFile({ ...fileData, name: user?.result?.name }));
 		});
 
 		alert('File(s) uploaded successfully!');
-		history.push('/library');
+		history.push('/library/*');
 	};
-
-	console.log(fileData);
-	console.log(fileList);
-	console.log(badFileList);
 
 	return (
 		<div className='page-container'>

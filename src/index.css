@@ -293,35 +293,17 @@ body {
 	margin-bottom: auto;
 }
 
+.filename-link {
+	text-align: left;
+	color: var(--primary-green);
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
 #view-edit-btn {
 	margin-top: 0px;
 	margin-left: 3px;
 }
-
-/*VIEW
-.view-container {
-	margin-top: 25px;
-	font-family: 'Lora', sans-serif;
-	width: 70vw;
-	border: 0.135rem solid var(--primary-green);
-	padding: 2rem;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.view-top-text {
-	margin-bottom: 2rem;
-	text-align: center;
-}
-
-.viewer-link {
-	color: var(--primary-green);
-}
-
-.file-viewer {
-	margin-left: auto;
-	margin-right: auto;
-}*/
 
 /*GRADE*/
 
@@ -338,10 +320,22 @@ body {
 	margin-bottom: 2rem;
 }
 
+.grade-title-container {
+	column-count: 3;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
 .grader-title {
 	text-align: center;
-	margin-top: 25px;
-	margin-bottom: 2rem;
+	font-size: 20px;
+	font-family: 'Lora', sans-serif;
+}
+
+.grader-grade {
+	text-align: center;
+	text-decoration: underline var(--primary-green);
+	font-size: 20px;
 	font-family: 'Lora', sans-serif;
 }
 

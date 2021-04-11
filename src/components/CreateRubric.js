@@ -28,7 +28,7 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 
 	const handleBack = () => {
 		setCurrentRubricId(0);
-		history.push('/library');
+		history.push('/library/*');
 	};
 
 	const rubricCells = [];
@@ -54,7 +54,7 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 				cells: [],
 			});
 			alert('Rubric added successfully!');
-			history.push('/library');
+			history.push('/library/*');
 		} else {
 			dispatch(
 				updateRubric(currentRubricId, {
@@ -70,7 +70,7 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 				cells: [],
 			});
 			alert('Rubric updated successfully!');
-			history.push('/library');
+			history.push('/library/*');
 		}
 	};
 
@@ -278,15 +278,3 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 }
 
 export default CreateRubric;
-
-/*<button
-																		onClick={
-																			saveCell
-																		}
-																		type='submit'
-																		id='cell-btn'
-																		className='btn btn-primary'
-																	>
-																		Save
-																		Description
-																	</button>*/
