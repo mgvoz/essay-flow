@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateFile } from '../actions/files';
 
 export default function Grade({
 	currentRubricId,
@@ -68,7 +69,9 @@ export default function Grade({
 											) : (
 												thisUsersRubrics.map(
 													(rubric) => (
-														<option>
+														<option
+															key={rubric._id}
+														>
 															{rubric.title}
 														</option>
 													),

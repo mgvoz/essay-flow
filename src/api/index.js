@@ -24,7 +24,12 @@ export const deleteRubric = (id) => API.delete(`/rubrics/${id}`);
 
 export const getFiles = () => API.get('/files');
 
-export const addFile = (newFile) => API.post('/files', newFile);
+export const addFile = (newFile) =>
+	API.post('/files/upload', newFile, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+		},
+	});
 
 export const updateFile = (id, updatedFile) =>
 	API.patch(`/files/${id}`, updatedFile);

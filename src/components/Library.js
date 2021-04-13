@@ -4,7 +4,6 @@ import { deleteFile } from '../actions/files';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { updateFile } from '../actions/files';
-import { FETCH_ALL_FILES } from '../constants/actionTypes';
 
 function Library({
 	currentRubricId,
@@ -45,10 +44,6 @@ function Library({
 		window.location.reload();
 	};
 
-	//console.log(thisUsersFiles);
-	console.log(studentName);
-	console.log(currentFileId);
-	console.log(currentFile);
 	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
 
 	return (
@@ -180,7 +175,7 @@ function Library({
 								</tbody>
 							</>
 						) : (
-							thisUsersFiles.map((file, key) => {
+							thisUsersFiles.map((file) => {
 								const date = file.dateUploaded.split('T');
 								return (
 									<tbody key={file._id}>
