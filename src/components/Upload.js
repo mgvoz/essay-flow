@@ -1,144 +1,45 @@
 import React, { useState } from 'react';
-import { addFile } from '../actions/files';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { useDropzone } from 'react-dropzone';
-import Dropzone from 'react-dropzone';
 
 function Upload() {
-	const dispatch = useDispatch();
-	const history = useHistory();
-	const user = JSON.parse(localStorage.getItem('profile'));
-	const [file, setFile] = useState(null);
-	const [fileData, setFileData] = useState([
-		{
-			filename: '',
-			currentGrade: 0,
-			notes: [],
-			student: '',
-			name: user.result.name,
-		},
-	]);
-	console.log(user);
-
-	const onDrop = (files) => {
-		const [uploadedFile] = files;
-		setFile(uploadedFile);
-	};
-
-	/*const {
-		acceptedFiles,
-		fileRejections,
-		getRootProps,
-		getInputProps,
-	} = useDropzone({
-		onDrop,
-		multiple: true,
-		accept:
-			'application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx, .pages',
-	});*/
-
-	const fileList = [];
-	const badFileList = [];
-
-	/*acceptedFiles.forEach((file) => {
-		fileList.push(file);
-	});
-	fileRejections.forEach((file) => {
-		badFileList.push(file);
-	});*/
-
-	/*const onDrop = useCallback(
-		(acceptedFiles) => {
-			setFileData({ ...fileData, fileInfo: acceptedFiles });
-			console.log(acceptedFiles);
-		},
-		[fileData],
-	);*/
-
-	const handleUpload = (e) => {
-		e.preventDefault();
-		try {
-			const { filename, currentGrade, notes, name, student } = fileData;
-			if (file) {
-				const formData = new FormData();
-				formData.append('file', file);
-				formData.append('filename', filename);
-				formData.append('currentGrade', currentGrade);
-				formData.append('notes', notes);
-				formData.append('student', student);
-				formData.append('name', name);
-				console.log(file);
-				dispatch(addFile(formData));
-				alert('File(s) uploaded successfully!');
-				history.push('/library/*');
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
-	//ORIGINAL VERSION
-	/*const handleUpload = (e) => {
-		e.preventDefault();
-		fileList.forEach((file) => {
-			setFileData({
-				...fileData,
-				fileInfo: file,
-			});
-			dispatch(addFile({ fileData, name: user?.result?.name }));
-		});
-		alert('File(s) uploaded successfully!');
-		history.push('/library/*');
-	};*/
-
-	console.log(fileData);
-	console.log(fileList);
+	const [fileName, setFileName] = useState('');
 
 	return (
 		<div className='page-container'>
 			<div className='upload-container'>
 				<h1 className='upload-heading'>File Upload</h1>
-				<Dropzone onDrop={onDrop}>
-					{({ getRootProps, getInputProps }) => (
-						<div {...getRootProps({ className: 'drop-zone' })}>
-							<input {...getInputProps()} />
-							<p>
-								Drag and drop a file OR click here to select a
-								file
-							</p>
-						</div>
-					)}
-				</Dropzone>
-
-				<div className='attached-files-container'>
-					<h5 className='file-list-heading'>Attached File(s):</h5>
-					<div className='attached-files'>
-						{fileList.map((file) => (
-							<p key={file.path}>{file.name}</p>
-						))}
+				<form
+					action='http://localhost:5000/files/upload'
+					method='POST'
+					encType='multipart/form-data'
+				>
+					<div className='custom-file'>
+						<input
+							type='file'
+							name='file'
+							className='custom-file-input'
+							accept='application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx, .pages'
+							required
+							onChange={(e) => {
+								setFileName(e.target.value.toString());
+							}}
+						/>
+						<label className='custom-file-label' htmlFor='file'>
+							{fileName === ''
+								? ''
+								: fileName.replace('C:\\fakepath\\', '')}
+						</label>
 					</div>
-				</div>
-				<div className='attached-files-container'>
-					<h5 className='file-list-heading'>Rejected File(s):</h5>
-					<div className='attached-files'>
-						{badFileList.map((file) => {
-							return <p key={file.file.path}>{file.file.name}</p>;
-						})}
-					</div>
-				</div>
-				<center>
-					<button
-						type='submit'
-						className='btn btn-sm btn-primary'
-						id='js-upload-submit'
-						onClick={handleUpload}
-					>
-						Upload File(s)
-					</button>
-				</center>
+					<center>
+						<input
+							type='submit'
+							value='Upload File'
+							className='btn btn-sm btn-primary'
+							id='js-upload-submit'
+						/>
+					</center>
+				</form>
 				<p className='upload-desc'>
-					All files can be found in your Library.
+					All uploaded files can be found in your Library.
 				</p>
 			</div>
 		</div>
@@ -146,6 +47,59 @@ function Upload() {
 }
 
 export default Upload;
+
+/*<div className='upload-dropzone' {...getRootProps()}>
+						<input type='file' name='file' {...getInputProps()} />
+						<p>
+							Drag 'n' drop some files here, or click to select
+							files.
+						</p>
+					</div>
+					<p className='file-types-text'>
+						(.pdf, .doc, .docx, .pages files only)
+					</p>*/
+
+/*<div className='attached-files-container'>
+						<h5 className='file-list-heading'>Attached File(s):</h5>
+						<div className='attached-files'>
+							{fileList.map((file) => (
+								<p key={file.path}>{file.name}</p>
+							))}
+						</div>
+					</div>
+					<div className='attached-files-container'>
+						<h5 className='file-list-heading'>Rejected File(s):</h5>
+						<div className='attached-files'>
+							{badFileList.map((file) => {
+								return (
+									<p key={file.file.path}>{file.file.name}</p>
+								);
+							})}
+						</div>
+					</div>*/
+
+/*<form
+					action='http://localhost:5000/files/upload'
+					method='POST'
+					encType='multipart/form-data'
+				>
+					<div className='custom-file mb-3'>
+						<input
+							type='file'
+							name='file'
+							id='file'
+							className='custom-file-input'
+						/>
+						<label for='file' className='custom-file-label'>
+							Choose File
+						</label>
+					</div>
+					<input
+						type='submit'
+						value='Submit'
+						className='btn btn-primary btn-block'
+					/>
+				</form>*/
 
 /*<div className='upload-dropzone' {...getRootProps()}>
 					<input {...getInputProps()} />

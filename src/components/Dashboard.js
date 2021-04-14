@@ -3,7 +3,7 @@ import React from 'react';
 function Dashboard({ rubrics, files }) {
 	const user = JSON.parse(localStorage.getItem('profile'));
 
-	const thisUsersRubrics = rubrics.filter(
+	/*const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
@@ -13,7 +13,8 @@ function Dashboard({ rubrics, files }) {
 		(file) =>
 			user?.result?.name === file?.name ||
 			user?.result?.name === file?.name,
-	);
+	);*/
+
 	return (
 		<div className='page-container'>
 			<div className='dashboard-container'>
@@ -45,12 +46,18 @@ function Dashboard({ rubrics, files }) {
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Rubrics Created</h5>
 							<p className='dash-stat'>
-								{thisUsersRubrics.length}
+								{/*thisUsersRubrics.length === 0
+									? 0
+								: thisUsersRubrics.length*/}
 							</p>
 						</div>
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Essays Uploaded</h5>
-							<p className='dash-stat'>{thisUsersFiles.length}</p>
+							<p className='dash-stat'>
+								{/*thisUsersFiles.length === 0
+									? 0
+								: thisUsersFiles.length*/}
+							</p>
 						</div>
 					</div>
 				</div>

@@ -9,6 +9,7 @@ import {
 export const getFiles = () => async (dispatch) => {
 	try {
 		const { data } = await api.getFiles();
+
 		dispatch({ type: FETCH_ALL_FILES, payload: data });
 	} catch (error) {
 		console.log(error.message);
@@ -17,6 +18,7 @@ export const getFiles = () => async (dispatch) => {
 
 export const addFile = (file) => async (dispatch) => {
 	try {
+		console.log(file);
 		const { data } = await api.addFile(file);
 		dispatch({ type: ADD_FILE, payload: data });
 	} catch (error) {

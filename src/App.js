@@ -86,11 +86,3 @@ const App = () => {
 };
 
 export default App;
-
-/*<Route path='/view-edit-rubric'>
-						<ViewEditRubric
-							currentRubricId={currentRubricId}
-							setCurrentRubricId={setCurrentRubricId}
-							rubrics={rubrics}
-						/>
-					</Route>*/

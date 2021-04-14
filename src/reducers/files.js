@@ -10,7 +10,7 @@ const reducers = (files = [], action) => {
 		case FETCH_ALL_FILES:
 			return action.payload;
 		case ADD_FILE:
-			return [...files, action.payload];
+			return [action.payload];
 		case UPDATE_FILE:
 			return files.map((file) =>
 				file._id === action.payload._id ? action.payload : file,
