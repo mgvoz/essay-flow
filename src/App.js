@@ -50,7 +50,7 @@ const App = () => {
 						<Dashboard rubrics={rubrics} files={files} />
 					</Route>
 					<Route exact path='/upload'>
-						<Upload />
+						<Upload files={files} />
 					</Route>
 					<Route exact path='/create-edit-rubric/*'>
 						<CreateRubric

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-function Upload() {
+function Upload({ files }) {
 	const [fileName, setFileName] = useState('');
+	const user = JSON.parse(localStorage.getItem('profile'));
 
 	return (
 		<div className='page-container'>
@@ -19,6 +20,7 @@ function Upload() {
 							className='custom-file-input'
 							accept='application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx, .pages'
 							required
+							autoFocus
 							onChange={(e) => {
 								setFileName(e.target.value.toString());
 							}}
@@ -35,6 +37,16 @@ function Upload() {
 							value='Upload File'
 							className='btn btn-sm btn-primary'
 							id='js-upload-submit'
+							onClick={() => {
+								document.cookie = `userName = ${user.result.name}; path=/`;
+								document.cookie = `userId = ${
+									user.result._id || user.result.googleId
+								}; path=/`;
+								document.cookie = `student = ""; path=/`;
+								document.cookie = `currentGrade = 0; path=/`;
+								document.cookie = `notes = []; path=/`;
+								alert('File uploaded successfully.');
+							}}
 						/>
 					</center>
 				</form>

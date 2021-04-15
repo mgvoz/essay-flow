@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { deleteRubric } from '../actions/rubrics';
-import { deleteFile } from '../actions/files';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { updateFile } from '../actions/files';
 
 function Library({
 	currentRubricId,
@@ -17,6 +15,10 @@ function Library({
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const [studentName, setStudentName] = useState('');
+	console.log(studentName);
+	const x = document.cookie;
+	console.log(x);
+	console.log(currentFileId);
 
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
@@ -24,34 +26,20 @@ function Library({
 			user?.result?.name === rubric?.name,
 	);
 
-	//FIND WAY TO ASSOCIATE USER WITH THEIR FILES-- MAYBE ANOTHER STATE ON UPLOAD PAGE
 	const fileArr = [];
 	for (let f in files) {
 		fileArr.push(files[f]);
 	}
 	const flatArr = fileArr.flat(2);
-	//THEN FILTER FLATARR FOR JUST THAT USER'S FILES
-	console.log(flatArr[14].filename);
 
-	/*const thisUsersFiles = files.filter(
+	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.name === file?.name ||
-			user?.result?.name === file?.name,
+			user?.result?.googleId === file?.metadata?.userId ||
+			user?.result?._id === file?.metadata?.userId,
 	);
-	const currentFile = useSelector((state) =>
-		currentFileId ? state.files.find((f) => f._id === currentFileId) : null,
-	);*/
 
-	const saveStudentName = (e) => {
-		e.preventDefault();
-		dispatch(
-			updateFile(currentFileId, {
-				//...currentFile,
-				student: studentName,
-			}),
-		);
-		window.location.reload();
-	};
+	console.log(thisUsersFiles);
+	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
 
 	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
 
@@ -167,7 +155,7 @@ function Library({
 								<th className='file-head' scope='col'></th>
 							</tr>
 						</thead>
-						{fileArr.length < 1 ? (
+						{thisUsersFiles[0] === 'No files available' ? (
 							<>
 								<tbody>
 									<tr>
@@ -184,8 +172,8 @@ function Library({
 								</tbody>
 							</>
 						) : (
-							fileArr.map((file) => {
-								//const date = file.uploadDate.split('T');
+							thisUsersFiles.map((file) => {
+								const date = file?.uploadDate?.split('T');
 								return (
 									<tbody key={file._id}>
 										<tr>
@@ -193,7 +181,7 @@ function Library({
 												className='file-head'
 												scope='row'
 											>
-												{/*date[0]*/}
+												{date[0]}
 											</th>
 											<td className='filename'>
 												<a
@@ -208,18 +196,20 @@ function Library({
 											</td>
 											<td className='filename'>
 												<form
-													onSubmit={saveStudentName}
+													method='POST'
+													action={
+														'http://localhost:5000/files/student/' +
+														currentFileId
+													}
 												>
 													<input
 														type='text'
-														name='studentName'
 														placeholder={
-															file.student !== ''
-																? file.student
+															file.metadata
+																.student !== ''
+																? file.metadata
+																		.student
 																: 'Enter student name'
-														}
-														value={
-															studentName || ''
 														}
 														onChange={(e) => {
 															setCurrentFileId(
@@ -234,15 +224,17 @@ function Library({
 														type='submit'
 														id='view-edit-btn'
 														className='btn btn-primary'
+														onClick={() =>
+															(document.cookie = `student = ${studentName}; path=/`)
+														}
 													>
 														Save
 													</button>
 												</form>
 											</td>
 											<td className='filename'>
-												{file.currentGrade === false
-													? 'Not yet graded'
-													: file.currentGrade + '%'}
+												{file?.metadata?.currentGrade +
+													'%'}
 											</td>
 											<td className='file-options'>
 												<center>
@@ -262,18 +254,14 @@ function Library({
 														Grade/Re-Grade
 													</button>
 													<form
-														method='DELETE'
-														action='http://localhost:5000/files/${file._id}'
+														method='POST'
+														action={
+															'http://localhost:5000/files/' +
+															file._id +
+															'?_method=DELETE'
+														}
 													>
 														<button
-															onClick={() => {
-																dispatch(
-																	deleteFile(
-																		file._id,
-																	),
-																);
-																window.location.reload();
-															}}
 															type='submit'
 															id='view-edit-btn'
 															className='btn btn-primary'

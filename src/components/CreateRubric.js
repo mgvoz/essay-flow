@@ -39,7 +39,6 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 			rubricCells.push(cell.value);
 		});
 		setRubricData({ ...rubricData, cells: rubricCells });
-		console.log(rubricData);
 	};
 
 	const handleSave = (e) => {

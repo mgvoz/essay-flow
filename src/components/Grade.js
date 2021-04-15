@@ -12,23 +12,30 @@ export default function Grade({
 }) {
 	const user = JSON.parse(localStorage.getItem('profile'));
 
-	const currentFile = useSelector((state) =>
-		currentFileId ? state.files.find((f) => f._id === currentFileId) : null,
-	);
-
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
 	);
 
-	const thisUsersFiles = files.filter(
+	const fileArr = [];
+	for (let f in files) {
+		fileArr.push(files[f]);
+	}
+	const flatArr = fileArr.flat(2);
+	console.log(flatArr);
+
+	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.name === file?.name ||
-			user?.result?.name === file?.name,
+			user?.result?.googleId === file?.metadata.userId ||
+			user?.result?._id === file?.metadata.userId,
 	);
 
-	console.log(thisUsersRubrics);
+	console.log(thisUsersFiles);
+
+	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
+
+	console.log(currentFile);
 
 	//add inputs for notes and grade
 	return (
@@ -36,13 +43,13 @@ export default function Grade({
 			<div className='grade-container'>
 				<div className='grade-title-container'>
 					<p className='grader-title'>
-						Now Grading: "{/*currentFile.fileInfo.name*/}"
+						Now Grading: "{currentFile[0].filename}"
 					</p>
 					<p className='grader-title'>
-						Student: {currentFile.student}
+						Student: {currentFile[0].metadata.student}
 					</p>
 					<p className='grader-grade'>
-						Current Grade: {currentFile.currentGrade}%
+						Current Grade: {currentFile[0].metadata.currentGrade}%
 					</p>
 				</div>
 				<div id='grader' className='container-fluid'>
