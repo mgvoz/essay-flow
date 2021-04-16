@@ -23,7 +23,6 @@ export default function Grade({
 		fileArr.push(files[f]);
 	}
 	const flatArr = fileArr.flat(2);
-	console.log(flatArr);
 
 	const thisUsersFiles = flatArr.filter(
 		(file) =>
@@ -31,13 +30,12 @@ export default function Grade({
 			user?.result?._id === file?.metadata.userId,
 	);
 
-	console.log(thisUsersFiles);
-
 	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
 
 	console.log(currentFile);
 
-	//add inputs for notes and grade
+	//get rubric table to populate; make each cell a button that adds the grade based on entered point values; each cell button will add that description to the notes array and have green outline when selected- only one selection per row; add custom notes text entry-- always last item in notes array?; "re-grade" should take them exactly to how the table looked with selections; make essay appear in left section-- readstream??
+
 	return (
 		<div className='page-container'>
 			<div className='grade-container'>
@@ -49,16 +47,21 @@ export default function Grade({
 						Student: {currentFile[0].metadata.student}
 					</p>
 					<p className='grader-grade'>
-						Current Grade: {currentFile[0].metadata.currentGrade}%
+						Current Grade:{' '}
+						{currentFile[0].metadata.currentGrade ===
+						'Not yet graded.'
+							? '0'
+							: currentFile[0].metadata.currentGrade}
+						%
 					</p>
 				</div>
 				<div id='grader' className='container-fluid'>
 					<div className='row'>
 						<div id='view-col' className='col-8'>
-							<h5 className='viewer-title'>View</h5>
-							<iframe title='grade-frame' className='grade-frame'>
+							<h5 className='viewer-title'>Essay</h5>
+							<div title='grade-frame' className='grade-frame'>
 								display selected document here
-							</iframe>
+							</div>
 						</div>
 						<div id='grade-col' className='col-4'>
 							<h5 className='viewer-title'>Rubric</h5>

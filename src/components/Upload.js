@@ -43,9 +43,10 @@ function Upload({ files }) {
 									user.result._id || user.result.googleId
 								}; path=/`;
 								document.cookie = `student = ""; path=/`;
-								document.cookie = `currentGrade = 0; path=/`;
+								document.cookie = `currentGrade = "Not yet graded."; path=/`;
 								document.cookie = `notes = []; path=/`;
-								alert('File uploaded successfully.');
+								fileName &&
+									alert('File uploaded successfully.');
 							}}
 						/>
 					</center>

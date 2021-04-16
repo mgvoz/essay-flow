@@ -3,17 +3,25 @@ import React from 'react';
 function Dashboard({ rubrics, files }) {
 	const user = JSON.parse(localStorage.getItem('profile'));
 
-	/*const thisUsersRubrics = rubrics.filter(
+	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
 	);
 
-	const thisUsersFiles = files.filter(
+	const fileArr = [];
+	for (let f in files) {
+		fileArr.push(files[f]);
+	}
+	const flatArr = fileArr.flat(2);
+
+	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.name === file?.name ||
-			user?.result?.name === file?.name,
-	);*/
+			user?.result?.googleId === file?.metadata.userId ||
+			user?.result?._id === file?.metadata.userId,
+	);
+
+	//make function to filter essays that have a grade
 
 	return (
 		<div className='page-container'>
@@ -46,17 +54,17 @@ function Dashboard({ rubrics, files }) {
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Rubrics Created</h5>
 							<p className='dash-stat'>
-								{/*thisUsersRubrics.length === 0
+								{thisUsersRubrics.length === 0
 									? 0
-								: thisUsersRubrics.length*/}
+									: thisUsersRubrics.length}
 							</p>
 						</div>
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Essays Uploaded</h5>
 							<p className='dash-stat'>
-								{/*thisUsersFiles.length === 0
+								{thisUsersFiles.length === 0
 									? 0
-								: thisUsersFiles.length*/}
+									: thisUsersFiles.length}
 							</p>
 						</div>
 					</div>

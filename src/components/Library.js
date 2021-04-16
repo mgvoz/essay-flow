@@ -11,14 +11,12 @@ function Library({
 	rubrics,
 	files,
 }) {
+	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
+
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const [studentName, setStudentName] = useState('');
-	console.log(studentName);
-	const x = document.cookie;
-	console.log(x);
-	console.log(currentFileId);
 
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
@@ -37,11 +35,6 @@ function Library({
 			user?.result?.googleId === file?.metadata?.userId ||
 			user?.result?._id === file?.metadata?.userId,
 	);
-
-	console.log(thisUsersFiles);
-	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
-
-	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
 
 	return (
 		<div className='page-container'>
@@ -196,7 +189,7 @@ function Library({
 											</td>
 											<td className='filename'>
 												<form
-													method='POST'
+													method='GET'
 													action={
 														'http://localhost:5000/files/student/' +
 														currentFileId
@@ -233,8 +226,11 @@ function Library({
 												</form>
 											</td>
 											<td className='filename'>
-												{file?.metadata?.currentGrade +
-													'%'}
+												{file.metadata.currentGrade ===
+												'Not yet graded.'
+													? 'Not yet graded'
+													: file.metadata
+															.currentGrade + '%'}
 											</td>
 											<td className='file-options'>
 												<center>
