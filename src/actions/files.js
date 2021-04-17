@@ -1,9 +1,9 @@
 import * as api from '../api';
 import {
 	FETCH_ALL_FILES,
-	ADD_FILE,
-	UPDATE_FILE,
-	DELETE_FILE,
+	//ADD_FILE,
+	//UPDATE_FILE,
+	//DELETE_FILE,
 } from '../constants/actionTypes';
 
 export const getFiles = () => async (dispatch) => {
@@ -16,7 +16,7 @@ export const getFiles = () => async (dispatch) => {
 	}
 };
 
-export const addFile = (file) => async (dispatch) => {
+/*export const addFile = (file) => async (dispatch) => {
 	try {
 		console.log(file);
 		const { data } = await api.addFile(file);
@@ -42,4 +42,4 @@ export const deleteFile = (id) => async (dispatch) => {
 	} catch (error) {
 		console.log(error);
 	}
-};
+};*/

@@ -38,7 +38,7 @@ function Dashboard({ rubrics, files }) {
 							<p className='dash-stat'>filename</p>
 						</div>
 						<div id='dash-col' className='col-sm'>
-							<h5>Avg. Time Spent Grading Each Essay</h5>
+							<h5>Avg. Time To Grade Each Essay</h5>
 							<p className='dash-stat'>0:00</p>
 						</div>
 						<div id='dash-col' className='col-sm'>

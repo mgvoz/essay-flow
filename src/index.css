@@ -190,6 +190,7 @@ body {
 }
 
 .dash-stat {
+	text-align: center;
 	font-size: 30px;
 	padding-top: 20%;
 }
@@ -321,7 +322,7 @@ body {
 }
 
 .grade-title-container {
-	column-count: 3;
+	column-count: 4;
 	margin-top: 30px;
 	margin-bottom: 30px;
 }
@@ -332,11 +333,29 @@ body {
 	font-family: 'Lora', sans-serif;
 }
 
+.grader-button > button {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 20px;
+	font-family: 'Lora', sans-serif;
+}
+
 .grader-grade {
 	text-align: center;
 	text-decoration: underline var(--primary-green);
 	font-size: 20px;
 	font-family: 'Lora', sans-serif;
+}
+
+.notes-label {
+	font-family: 'Lora', sans-serif;
+	font-size: 18px;
+}
+
+.notes-text {
+	width: inherit;
+	height: 7rem;
 }
 
 .viewer-title {
@@ -357,6 +376,11 @@ body {
 	width: 100%;
 	height: inherit;
 	border: solid 0.135rem var(--primary-light);
+}
+
+.grade-frame > iframe {
+	width: 100%;
+	height: inherit;
 }
 
 /*CREATE RUBRIC*/
