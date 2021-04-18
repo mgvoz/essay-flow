@@ -46,6 +46,7 @@ body {
 #logout-button {
 	margin-top: auto;
 	margin-bottom: auto;
+	font-family: 'Lora', sans-serif;
 }
 
 /*FOOTER*/
@@ -381,6 +382,22 @@ body {
 .grade-frame > iframe {
 	width: 100%;
 	height: inherit;
+}
+
+.table {
+	font-family: 'Lora', sans-serif;
+}
+
+.rubric-checkbox {
+	width: 20px;
+	height: 20px;
+	border: solid var(--primary-green);
+}
+
+input:checked ~ .rubric-checkbox {
+	width: 20px;
+	height: 20px;
+	background-color: var(--primary-green) !important;
 }
 
 /*CREATE RUBRIC*/

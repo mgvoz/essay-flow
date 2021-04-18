@@ -41,8 +41,8 @@ export default function Grade({
 
 	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
 
-	console.log('currentFile:', currentFile);
-	console.log(notes);
+	//console.log('currentFile:', currentFile);
+	console.log('notes: ', notes);
 
 	//make each cell a button that adds the grade based on entered point values; each cell button will add that description to the notes array and have green outline when selected- only one selection per row; "re-grade" should take them exactly to how the table looked with selections; make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies?
 
@@ -78,9 +78,7 @@ export default function Grade({
 								className='btn btn btn-primary'
 								onClick={() => {
 									document.cookie = `currentGrade = ${grade}; path=/`;
-									document.cookie = `notes = ${
-										(rubricSelections, notes)
-									}; path=/`;
+									document.cookie = `notes = "Rubric: ${rubricSelections}, Custom Notes: "${notes}; path=/`;
 								}}
 							>
 								Submit Grade & Notes
@@ -94,8 +92,9 @@ export default function Grade({
 							<h5 className='viewer-title'>Essay</h5>
 							<div title='grade-frame' className='grade-frame'>
 								<iframe
+									title='doc-viewer'
 									src={
-										'https://localhost:5000/files' +
+										'https://localhost:5000/files/essay/' +
 										currentFile._id
 									}
 									frameBorder='0'
@@ -126,7 +125,6 @@ export default function Grade({
 												thisUsersRubrics.map(
 													(rubric) => (
 														<option
-															readOnly
 															value={rubric._id}
 															key={rubric._id}
 														>
@@ -141,12 +139,16 @@ export default function Grade({
 							</div>
 							{currentRubricId ? (
 								<GradingRubric
+									grade={grade}
+									setGrade={setGrade}
 									thisUsersRubrics={thisUsersRubrics}
 									currentRubricId={currentRubricId}
 									currentFileId={currentFileId}
+									rubricSelections={rubricSelections}
+									setRubricSelections={setRubricSelections}
 								/>
 							) : null}
-							<label className='notes-label' for='notes'>
+							<label className='notes-label' htmlFor='notes'>
 								Notes:
 							</label>
 							<br />

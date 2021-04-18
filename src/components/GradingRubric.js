@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function GradingRubric({ thisUsersRubrics, currentRubricId }) {
+function GradingRubric({
+	thisUsersRubrics,
+	currentRubricId,
+	rubricSelections,
+	setRubricSelections,
+	grade,
+	setGrade,
+}) {
 	const currentRubric = thisUsersRubrics.filter(
 		(f) => f._id === currentRubricId,
 	);
+	const [selected, setSelected] = useState('');
+
 	let index = -1;
 
 	return (
@@ -37,9 +46,30 @@ function GradingRubric({ thisUsersRubrics, currentRubricId }) {
 										index++;
 										return (
 											<td
+												name='cell'
 												key={key}
-												id='test'
+												id='cell'
 												className='text-center'
+												onClick={(e) => {
+													const c = e.target.closest(
+														'td',
+													);
+													const r = c.parentElement;
+													console.log(col);
+													c.style =
+														'border: 2px solid #2dac6d';
+													setRubricSelections([
+														...rubricSelections,
+														row +
+															': ' +
+															c.innerHTML +
+															' - ' +
+															col +
+															' points',
+													]);
+
+													//add logic to add and subtract points and unselect cell border
+												}}
 											>
 												{currentRubric[0].cells[index]}
 											</td>
@@ -56,18 +86,8 @@ function GradingRubric({ thisUsersRubrics, currentRubricId }) {
 }
 
 export default GradingRubric;
-
-/*<textarea
-													className='cells'
-													name='desc'
-													id='desc'
-													cols='auto'
-													rows='auto'
-													placeholder='Click here to add description'
-													value={
-														currentRubric[0].cells[
-															index
-														]
-													}
-													//onChange={data}
-												></textarea>*/
+/*<input
+													className='rubric-checkbox'
+													id='myCheck'
+													type='checkbox'
+												/>*/
