@@ -11,8 +11,6 @@ function Library({
 	rubrics,
 	files,
 }) {
-	//EVENTUALLY ALLOW USER TO CREATE FOLDERS TO GROUP FILES
-
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
@@ -35,6 +33,9 @@ function Library({
 			user?.result?.googleId === file?.metadata?.userId ||
 			user?.result?._id === file?.metadata?.userId,
 	);
+	const [expanded, setExpanded] = useState(0);
+
+	const currentFile = thisUsersFiles.filter((f) => f._id === expanded);
 
 	return (
 		<div className='page-container'>
@@ -133,7 +134,7 @@ function Library({
 					<table className='table table-hover'>
 						<thead className='thead-light'>
 							<tr>
-								<th className='file-head' scope='col'>
+								<th className='file-head ' scope='col'>
 									Date Uploaded
 								</th>
 								<th className='file-head' scope='col'>
@@ -233,7 +234,7 @@ function Library({
 															.currentGrade + '%'}
 											</td>
 											<td className='file-options'>
-												<center>
+												<form className='grade-delete'>
 													<button
 														onClick={() => {
 															setCurrentFileId(
@@ -249,25 +250,65 @@ function Library({
 														id='view-edit-btn'
 														className='btn btn-primary'
 													>
-														Grade/Re-Grade
+														Grade
 													</button>
-													<form
-														method='POST'
-														action={
-															'http://localhost:5000/files/' +
-															file._id +
-															'?_method=DELETE'
+												</form>
+												<form className='grade-delete'>
+													<button
+														type='button'
+														className='btn btn-primary'
+														id='view-edit-btn'
+														data-toggle='collapse'
+														data-target={
+															'#collapseRow' +
+															file._id
+														}
+														aria-expanded='false'
+														aria-controls={
+															'collapseRow' +
+															file._id
+														}
+														onClick={() =>
+															setExpanded(
+																file._id,
+															)
 														}
 													>
-														<button
-															type='submit'
-															id='view-edit-btn'
-															className='btn btn-primary'
-														>
-															Delete
-														</button>
-													</form>
-												</center>
+														View Feedback
+													</button>
+												</form>
+												<form
+													className='grade-delete'
+													method='POST'
+													action={
+														'http://localhost:5000/files/' +
+														file._id +
+														'?_method=DELETE'
+													}
+												>
+													<button
+														type='submit'
+														id='view-edit-btn'
+														className='btn btn-primary'
+													>
+														Delete
+													</button>
+												</form>
+											</td>
+										</tr>
+										<tr
+											className='collapse'
+											id={'collapseRow' + file._id}
+											colSpan='5'
+										>
+											<td colSpan='5'>
+												{currentFile[0] === undefined
+													? null
+													: currentFile[0].metadata
+															.notes === '[]'
+													? 'No feedback entered yet.'
+													: currentFile[0].metadata
+															.notes}
 											</td>
 										</tr>
 									</tbody>

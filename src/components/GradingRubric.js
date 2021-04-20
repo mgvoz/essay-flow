@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function GradingRubric({
-	thisUsersRubrics,
-	currentRubricId,
-	rubricSelections,
-	setRubricSelections,
-	grade,
-	setGrade,
-}) {
+function GradingRubric({ thisUsersRubrics, currentRubricId, handleGrade }) {
 	const currentRubric = thisUsersRubrics.filter(
 		(f) => f._id === currentRubricId,
 	);
-	const [selected, setSelected] = useState('');
 
 	let index = -1;
 
@@ -42,7 +34,7 @@ function GradingRubric({
 									{row}
 								</th>
 								{currentRubric[0].columnHeads.map(
-									(col, key) => {
+									(col, key, e) => {
 										index++;
 										return (
 											<td
@@ -55,20 +47,7 @@ function GradingRubric({
 														'td',
 													);
 													const r = c.parentElement;
-													console.log(col);
-													c.style =
-														'border: 2px solid #2dac6d';
-													setRubricSelections([
-														...rubricSelections,
-														row +
-															': ' +
-															c.innerHTML +
-															' - ' +
-															col +
-															' points',
-													]);
-
-													//add logic to add and subtract points and unselect cell border
+													handleGrade(c, r, col, row);
 												}}
 											>
 												{currentRubric[0].cells[index]}
@@ -86,8 +65,3 @@ function GradingRubric({
 }
 
 export default GradingRubric;
-/*<input
-													className='rubric-checkbox'
-													id='myCheck'
-													type='checkbox'
-												/>*/

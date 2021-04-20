@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateFile } from '../actions/files';
 import GradingRubric from './GradingRubric';
+import { useHistory } from 'react-router-dom';
 
 export default function Grade({
 	currentRubricId,
@@ -12,7 +11,7 @@ export default function Grade({
 	files,
 }) {
 	const user = JSON.parse(localStorage.getItem('profile'));
-
+	const history = useHistory();
 	const [grade, setGrade] = useState(0);
 	const [notes, setNotes] = useState([]);
 	const [rubricSelections, setRubricSelections] = useState([]);
@@ -35,16 +34,55 @@ export default function Grade({
 			user?.result?._id === file?.metadata.userId,
 	);
 
+	//make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies?
+
 	/*const cookieArr = document.cookie.split(';');
 	const newCooks = cookieArr.map((cook) => cook.split('='));
 	const cook = newCooks.filter((c) => c[0] === ' currentFileId');*/
 
 	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
 
-	//console.log('currentFile:', currentFile);
-	console.log('notes: ', notes);
+	const selections = document.getElementsByName('cell');
+	const finalSelections = Array.from(selections).filter(
+		(cell) => cell.style[0] === 'border-top-width',
+	);
+	console.log(finalSelections[0].parentElement);
+	//use above to save final selections to DB
 
-	//make each cell a button that adds the grade based on entered point values; each cell button will add that description to the notes array and have green outline when selected- only one selection per row; "re-grade" should take them exactly to how the table looked with selections; make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies?
+	const handleGrade = (c, r, col, row) => {
+		console.log(r.parentElement);
+		if (
+			Array.from(r.children).filter(
+				(child) => child.style[0] === 'border-top-width',
+			).length < 1
+		) {
+			if (c.style.border === '') {
+				c.style = 'border: 2px solid #2dac6d';
+				setGrade(grade + parseInt(col));
+			} else {
+				c.style = '';
+				setGrade(grade - parseInt(col));
+			}
+		} else if (
+			c.style.borderTopWidth === '2px' &&
+			Array.from(r.children).filter(
+				(child) => child.style[0] === 'border-top-width',
+			).length === 1
+		) {
+			c.style = '';
+			setGrade(grade - parseInt(col));
+		} else {
+			alert(
+				'Select only one cell per row. Please de-select your current selection to make a different selection.',
+			);
+		}
+	};
+	/*setRubricSelections([
+		...rubricSelections,
+		row + ': ' + c.innerText + ' - ' + col + ' points',
+	]);*/
+	console.log(finalSelections);
+	console.log(rubricSelections);
 
 	return (
 		<div className='page-container'>
@@ -58,33 +96,37 @@ export default function Grade({
 					</p>
 					<p className='grader-grade'>
 						Current Grade:{' '}
-						{currentFile[0].metadata.currentGrade ===
-						'Not yet graded.'
-							? grade
-							: currentFile[0].metadata.currentGrade}
-						%
+						{grade || currentFile[0].metadata.currentGrade}%
 					</p>
-					<center>
-						<form
-							className='grader-button'
-							method='GET'
-							action={
-								'http://localhost:5000/files/grade/' +
-								currentFileId
-							}
+
+					<form className='grader-button'>
+						<button
+							type='submit'
+							className='btn btn btn-primary'
+							onClick={() => history.push('/library/*')}
 						>
-							<button
-								type='submit'
-								className='btn btn btn-primary'
-								onClick={() => {
-									document.cookie = `currentGrade = ${grade}; path=/`;
-									document.cookie = `notes = "Rubric: ${rubricSelections}, Custom Notes: "${notes}; path=/`;
-								}}
-							>
-								Submit Grade & Notes
-							</button>
-						</form>
-					</center>
+							Go Back Without Saving
+						</button>
+					</form>
+
+					<form
+						className='grader-button'
+						method='GET'
+						action={
+							'http://localhost:5000/files/grade/' + currentFileId
+						}
+					>
+						<button
+							type='submit'
+							className='btn btn btn-primary'
+							onClick={() => {
+								document.cookie = `currentGrade = ${grade}; path=/`;
+								document.cookie = `notes = "Rubric: ${rubricSelections}, Custom Notes: "${notes}; path=/`;
+							}}
+						>
+							Submit Grade & Notes
+						</button>
+					</form>
 				</div>
 				<div id='grader' className='container-fluid'>
 					<div className='row'>
@@ -115,6 +157,9 @@ export default function Grade({
 												)
 											}
 										>
+											<option selected disabled>
+												Select Rubric
+											</option>
 											{thisUsersRubrics.length === 0 ? (
 												<option disabled>
 													No Rubrics Available -
@@ -141,6 +186,7 @@ export default function Grade({
 								<GradingRubric
 									grade={grade}
 									setGrade={setGrade}
+									handleGrade={handleGrade}
 									thisUsersRubrics={thisUsersRubrics}
 									currentRubricId={currentRubricId}
 									currentFileId={currentFileId}
