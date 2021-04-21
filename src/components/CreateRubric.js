@@ -4,6 +4,7 @@ import { createRubric, updateRubric } from '../actions/rubrics';
 import { useHistory } from 'react-router-dom';
 
 function CreateRubric({ currentRubricId, setCurrentRubricId }) {
+	//set variables
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const user = JSON.parse(localStorage.getItem('profile'));
@@ -13,6 +14,7 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 			: null,
 	);
 
+	//state to collect rubric criteria entered by user
 	const [rubricData, setRubricData] = useState({
 		title: '',
 		columnHeads: [],
@@ -20,17 +22,19 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 		cells: [],
 	});
 
-	let index = -1;
-
+	//used for when users edit previously created rubric
 	useEffect(() => {
 		if (currentRubric) setRubricData(currentRubric);
 	}, [currentRubric]);
 
+	//function to return to library without saving changes
 	const handleBack = () => {
 		setCurrentRubricId(0);
 		history.push('/library/*');
 	};
 
+	//used to loop through cells/their descriptions
+	let index = -1;
 	const rubricCells = [];
 	var cellData = document.getElementsByName('desc');
 
@@ -41,6 +45,7 @@ function CreateRubric({ currentRubricId, setCurrentRubricId }) {
 		setRubricData({ ...rubricData, cells: rubricCells });
 	};
 
+	//save rubric entries
 	const handleSave = (e) => {
 		e.preventDefault();
 		if (currentRubricId === 0) {

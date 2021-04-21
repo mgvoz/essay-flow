@@ -6,6 +6,7 @@ import decode from 'jwt-decode';
 import * as actionType from '../constants/actionTypes';
 
 const Navbar = () => {
+	//set variables
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const history = useHistory();
@@ -13,6 +14,7 @@ const Navbar = () => {
 		JSON.parse(localStorage.getItem('profile')),
 	);
 
+	//dispatch logout function for logout button
 	const logout = () => {
 		dispatch({ type: actionType.LOGOUT });
 
@@ -21,6 +23,7 @@ const Navbar = () => {
 		setUser(null);
 	};
 
+	//get user info for navbar, set auto-logout
 	useEffect(() => {
 		const token = user?.token;
 		if (token) {

@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { signin, signup } from '../actions/auth';
 
 const Auth = () => {
+	//set variables
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const [isSignup, setIsSignup] = useState(false);
@@ -15,10 +16,12 @@ const Auth = () => {
 		confirmPassword: '',
 	});
 
+	//switch between log in and sign up
 	const switchMode = () => {
 		setIsSignup(!isSignup);
 	};
 
+	//submit log in or sign up
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (isSignup) {
@@ -28,10 +31,12 @@ const Auth = () => {
 		}
 	};
 
+	//capture user input
 	const handleChange = (e) => {
 		setUserData({ ...userData, [e.target.name]: e.target.value });
 	};
 
+	//google sign in- success and failure
 	const googleSuccess = async (res) => {
 		const result = res?.profileObj;
 		const token = res?.tokenId;

@@ -310,11 +310,8 @@ body {
 	margin-left: 3px;
 }
 .collapse {
-	width: 80vw;
-	height: 100px;
+	width: 60vw;
 	border: solid 2px var(--primary-light);
-	border-radius: 10%;
-	margin-bottom: 15px;
 }
 
 /*GRADE*/

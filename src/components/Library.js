@@ -11,17 +11,26 @@ function Library({
 	rubrics,
 	files,
 }) {
+	/*************************************/
+
+	//FIND WAY TO ONLY DISPLAY FEEDBACK OF ONE ROW AT A TIME!!!!!!!!
+
+	/*************************************/
+
+	//set variables
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const [studentName, setStudentName] = useState('');
 
+	//access only signed-in user's rubrics
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
 	);
 
+	//access only signed-in user's files
 	const fileArr = [];
 	for (let f in files) {
 		fileArr.push(files[f]);
@@ -33,8 +42,11 @@ function Library({
 			user?.result?.googleId === file?.metadata?.userId ||
 			user?.result?._id === file?.metadata?.userId,
 	);
+
+	//state for toggling collapse row for feedback
 	const [expanded, setExpanded] = useState(0);
 
+	//get all data for current file selected with ID
 	const currentFile = thisUsersFiles.filter((f) => f._id === expanded);
 
 	return (
@@ -233,14 +245,17 @@ function Library({
 													: file.metadata
 															.currentGrade + '%'}
 											</td>
-											<td className='file-options'>
+											<td
+												className='file-options'
+												id='parent'
+											>
 												<form className='grade-delete'>
 													<button
 														onClick={() => {
 															setCurrentFileId(
 																file._id,
 															);
-															//document.cookie = `currentFileId = ${file._id}; path=/`;
+															document.cookie = `currentFileId = ${file._id}; path=/`;
 															history.push(
 																'/grade/' +
 																	file._id,
@@ -268,11 +283,11 @@ function Library({
 															'collapseRow' +
 															file._id
 														}
-														onClick={() =>
+														onClick={() => {
 															setExpanded(
 																file._id,
-															)
-														}
+															);
+														}}
 													>
 														View Feedback
 													</button>

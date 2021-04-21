@@ -6,22 +6,37 @@ export default function Grade({
 	currentRubricId,
 	setCurrentRubricId,
 	currentFileId,
-	setCurrentFileId,
 	rubrics,
 	files,
 }) {
+	/*************************************/
+
+	//make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies? see below
+
+	/*************************************/
+
+	const cookieArr = document.cookie.split(';');
+	const newCooks = cookieArr.map((cook) => cook.split('='));
+	const cook = newCooks.filter((c) => c[0] === ' currentFileId');
+	console.log(cook);
+	const fileInUse = cook[0][1];
+	console.log(fileInUse);
+
+	//set variables
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const history = useHistory();
 	const [grade, setGrade] = useState(0);
 	const [notes, setNotes] = useState([]);
-	const [rubricSelections, setRubricSelections] = useState([]);
+	const rubricData = [];
 
+	//access only signed-in user's rubrics
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
 	);
 
+	//access only signed-in user's files
 	const fileArr = [];
 	for (let f in files) {
 		fileArr.push(files[f]);
@@ -34,23 +49,11 @@ export default function Grade({
 			user?.result?._id === file?.metadata.userId,
 	);
 
-	//make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies?
+	//get all data for current file selected with ID
+	var currentFile = thisUsersFiles.filter((f) => f._id === fileInUse);
 
-	/*const cookieArr = document.cookie.split(';');
-	const newCooks = cookieArr.map((cook) => cook.split('='));
-	const cook = newCooks.filter((c) => c[0] === ' currentFileId');*/
-
-	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
-
-	const selections = document.getElementsByName('cell');
-	const finalSelections = Array.from(selections).filter(
-		(cell) => cell.style[0] === 'border-top-width',
-	);
-	console.log(finalSelections[0].parentElement);
-	//use above to save final selections to DB
-
+	//show selections from rubric, add grade
 	const handleGrade = (c, r, col, row) => {
-		console.log(r.parentElement);
 		if (
 			Array.from(r.children).filter(
 				(child) => child.style[0] === 'border-top-width',
@@ -77,12 +80,33 @@ export default function Grade({
 			);
 		}
 	};
-	/*setRubricSelections([
-		...rubricSelections,
-		row + ': ' + c.innerText + ' - ' + col + ' points',
-	]);*/
-	console.log(finalSelections);
-	console.log(rubricSelections);
+
+	//access data from selections to save to file metadata
+	const selections = document.getElementsByName('cell');
+	const finalSelections = Array.from(selections).filter(
+		(cell) => cell.style[0] === 'border-top-width',
+	);
+	finalSelections.forEach((selection) => {
+		var index = Array.prototype.indexOf.call(
+			selection.parentNode.children,
+			selection,
+		);
+		var corresponding_th = document.querySelector(
+			'#rubric-grade-table th:nth-child(' + (index + 1) + ')',
+		);
+		var colName = corresponding_th.innerHTML;
+		var rowName = selection.parentNode.children[0].innerText;
+
+		rubricData.push(
+			' ' +
+				rowName +
+				': ' +
+				selection.innerText +
+				' - ' +
+				colName +
+				' point(s)',
+		);
+	});
 
 	return (
 		<div className='page-container'>
@@ -121,7 +145,7 @@ export default function Grade({
 							className='btn btn btn-primary'
 							onClick={() => {
 								document.cookie = `currentGrade = ${grade}; path=/`;
-								document.cookie = `notes = "Rubric: ${rubricSelections}, Custom Notes: "${notes}; path=/`;
+								document.cookie = `notes = "Rubric: ${rubricData}, Custom Notes: ${notes}"; path=/`;
 							}}
 						>
 							Submit Grade & Notes
@@ -184,14 +208,9 @@ export default function Grade({
 							</div>
 							{currentRubricId ? (
 								<GradingRubric
-									grade={grade}
-									setGrade={setGrade}
 									handleGrade={handleGrade}
 									thisUsersRubrics={thisUsersRubrics}
 									currentRubricId={currentRubricId}
-									currentFileId={currentFileId}
-									rubricSelections={rubricSelections}
-									setRubricSelections={setRubricSelections}
 								/>
 							) : null}
 							<label className='notes-label' htmlFor='notes'>
