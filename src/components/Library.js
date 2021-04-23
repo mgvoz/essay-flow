@@ -255,7 +255,6 @@ function Library({
 															setCurrentFileId(
 																file._id,
 															);
-															document.cookie = `currentFileId = ${file._id}; path=/`;
 															history.push(
 																'/grade/' +
 																	file._id,

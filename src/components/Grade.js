@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GradingRubric from './GradingRubric';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 export default function Grade({
 	currentRubricId,
@@ -11,20 +11,14 @@ export default function Grade({
 }) {
 	/*************************************/
 
-	//make essay appear in left section???; get grade page to retain currentFileId even when refreshed- cookies? see below
+	//make essay appear in left section???
 
 	/*************************************/
-
-	const cookieArr = document.cookie.split(';');
-	const newCooks = cookieArr.map((cook) => cook.split('='));
-	const cook = newCooks.filter((c) => c[0] === ' currentFileId');
-	console.log(cook);
-	const fileInUse = cook[0][1];
-	console.log(fileInUse);
 
 	//set variables
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const history = useHistory();
+	var { id } = useParams();
 	const [grade, setGrade] = useState(0);
 	const [notes, setNotes] = useState([]);
 	const rubricData = [];
@@ -45,12 +39,12 @@ export default function Grade({
 
 	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.googleId === file?.metadata.userId ||
-			user?.result?._id === file?.metadata.userId,
+			user?.result?.googleId === file?.metadata?.userId ||
+			user?.result?._id === file?.metadata?.userId,
 	);
 
 	//get all data for current file selected with ID
-	var currentFile = thisUsersFiles.filter((f) => f._id === fileInUse);
+	var currentFile = thisUsersFiles.filter((f) => f._id === id);
 
 	//show selections from rubric, add grade
 	const handleGrade = (c, r, col, row) => {
@@ -113,14 +107,14 @@ export default function Grade({
 			<div className='grade-container'>
 				<div className='grade-title-container'>
 					<p className='grader-title'>
-						Now Grading: <em>"{currentFile[0].filename}"</em>
+						Now Grading: <em>"{currentFile[0]?.filename}"</em>
 					</p>
 					<p className='grader-title'>
-						Student: <em>{currentFile[0].metadata.student}</em>
+						Student: <em>{currentFile[0]?.metadata?.student}</em>
 					</p>
 					<p className='grader-grade'>
 						Current Grade:{' '}
-						{grade || currentFile[0].metadata.currentGrade}%
+						{grade || currentFile[0]?.metadata?.currentGrade}%
 					</p>
 
 					<form className='grader-button'>
@@ -161,7 +155,7 @@ export default function Grade({
 									title='doc-viewer'
 									src={
 										'https://localhost:5000/files/essay/' +
-										currentFile._id
+										currentFile[0]?._id
 									}
 									frameBorder='0'
 								></iframe>
@@ -181,7 +175,11 @@ export default function Grade({
 												)
 											}
 										>
-											<option selected disabled>
+											<option
+												defaultValue
+												selected
+												disabled
+											>
 												Select Rubric
 											</option>
 											{thisUsersRubrics.length === 0 ? (

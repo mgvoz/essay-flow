@@ -68,7 +68,7 @@ const App = () => {
 							files={files}
 						/>
 					</Route>
-					<Route exact path='/grade/*'>
+					<Route exact path='/grade/:id'>
 						<Grade
 							currentRubricId={currentRubricId}
 							setCurrentRubricId={setCurrentRubricId}
