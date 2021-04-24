@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GradingRubric from './GradingRubric';
 import { useHistory, useParams } from 'react-router-dom';
+import TimeMe from 'timeme.js';
 
 export default function Grade({
 	currentRubricId,
@@ -102,6 +103,10 @@ export default function Grade({
 		);
 	});
 
+	//time spent on page
+	TimeMe.initialize({ currentPageName: 'grade', idleTimeoutInSeconds: 60 });
+	let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
 	return (
 		<div className='page-container'>
 			<div className='grade-container'>
@@ -140,6 +145,8 @@ export default function Grade({
 							onClick={() => {
 								document.cookie = `currentGrade = ${grade}; path=/`;
 								document.cookie = `notes = "Rubric: ${rubricData}, Custom Notes: ${notes}"; path=/`;
+								document.cookie = `timeSpentGrading = ${timeSpentOnPage}; path=/`;
+								document.cookie = `lastUpdated = ${new Date()}; path=/`;
 							}}
 						>
 							Submit Grade & Notes
@@ -154,7 +161,7 @@ export default function Grade({
 								<iframe
 									title='doc-viewer'
 									src={
-										'https://localhost:5000/files/essay/' +
+										'https://localhost:5000/files/view/' +
 										currentFile[0]?._id
 									}
 									frameBorder='0'

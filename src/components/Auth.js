@@ -217,14 +217,25 @@ const Auth = () => {
 									cookiePolicy='single_host_origin'
 								/>
 							</center>
-							<div className='login-links'>
-								<button
-									className='btn btn-primary'
-									onClick={switchMode}
-								>
-									Click here to create an account.
-								</button>
-							</div>
+							<center>
+								<div className='login-links'>
+									<button
+										className='btn btn-primary'
+										onClick={switchMode}
+									>
+										Click here to create an account
+									</button>
+									<button
+										id='forgot-btn'
+										className='btn btn-primary'
+										onClick={() =>
+											history.push('/forgot/*')
+										}
+									>
+										Forgot Username or Password
+									</button>
+								</div>
+							</center>
 						</>
 					)}
 				</form>

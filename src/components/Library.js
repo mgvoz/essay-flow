@@ -11,12 +11,6 @@ function Library({
 	rubrics,
 	files,
 }) {
-	/*************************************/
-
-	//FIND WAY TO ONLY DISPLAY FEEDBACK OF ONE ROW AT A TIME!!!!!!!!
-
-	/*************************************/
-
 	//set variables
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -260,7 +254,7 @@ function Library({
 																	file._id,
 															);
 														}}
-														type='submit'
+														type='button'
 														id='view-edit-btn'
 														className='btn btn-primary'
 													>
@@ -310,21 +304,25 @@ function Library({
 												</form>
 											</td>
 										</tr>
-										<tr
-											className='collapse'
-											id={'collapseRow' + file._id}
-											colSpan='5'
-										>
-											<td colSpan='5'>
-												{currentFile[0] === undefined
-													? null
-													: currentFile[0].metadata
-															.notes === '[]'
-													? 'No feedback entered yet.'
-													: currentFile[0].metadata
-															.notes}
-											</td>
-										</tr>
+										{file._id === expanded ? (
+											<tr
+												className='collapse'
+												id={'collapseRow' + file._id}
+												colSpan='5'
+											>
+												<td colSpan='5'>
+													{currentFile[0] ===
+													undefined
+														? null
+														: currentFile[0]
+																.metadata
+																.notes === '[]'
+														? 'No feedback entered yet.'
+														: currentFile[0]
+																.metadata.notes}
+												</td>
+											</tr>
+										) : null}
 									</tbody>
 								);
 							})

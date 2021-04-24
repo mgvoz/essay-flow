@@ -115,7 +115,12 @@ body {
 }
 
 .login-links {
+	display: block;
 	margin-top: 2rem;
+}
+
+#forgot-btn {
+	margin-left: 5px;
 }
 
 /*SIGN UP*/
@@ -190,10 +195,17 @@ body {
 	margin-top: 0.8rem;
 }
 
+.stat-container {
+	padding-top: 20%;
+}
+
+.stat-container2 {
+	padding-top: 12%;
+}
 .dash-stat {
+	position: relative;
 	text-align: center;
 	font-size: 30px;
-	padding-top: 20%;
 }
 
 /*UPLOAD*/
@@ -308,10 +320,6 @@ body {
 #view-edit-btn {
 	margin-top: 0px;
 	margin-left: 3px;
-}
-.collapse {
-	width: 60vw;
-	border: solid 2px var(--primary-light);
 }
 
 /*GRADE*/

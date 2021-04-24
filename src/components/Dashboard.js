@@ -1,14 +1,17 @@
 import React from 'react';
 
 function Dashboard({ rubrics, files }) {
+	//set variables
 	const user = JSON.parse(localStorage.getItem('profile'));
 
+	//get only rubrics created by signed in user
 	const thisUsersRubrics = rubrics.filter(
 		(rubric) =>
 			user?.result?.name === rubric?.name ||
 			user?.result?.name === rubric?.name,
 	);
 
+	//get only files uploaded by signed in user
 	const fileArr = [];
 	for (let f in files) {
 		fileArr.push(files[f]);
@@ -21,7 +24,32 @@ function Dashboard({ rubrics, files }) {
 			user?.result?._id === file?.metadata.userId,
 	);
 
-	//make function to filter essays that have a grade
+	//get # of essays graded
+	const essaysGraded = thisUsersFiles.filter(
+		(f) => f?.metadata?.currentGrade !== 'Not yet graded.',
+	);
+
+	//get average essay score
+	const gradesArr = [0];
+	essaysGraded.forEach((f) =>
+		gradesArr.push(parseFloat(f?.metadata?.currentGrade)),
+	);
+	const avgGrade = gradesArr?.reduce((a, b) => a + b) / gradesArr?.length;
+
+	//get average time spent grading each essay
+	const times = [0];
+	essaysGraded.forEach((f) =>
+		times.push(parseFloat(f?.metadata?.timeSpentGrading)),
+	);
+	const avgTime = times?.reduce((a, b) => a + b) / times?.length;
+
+	//get last graded essay
+	let updates = [0];
+	essaysGraded.forEach((f) => updates.push(f?.metadata?.lastUpdated));
+	const mostRecentDate = updates.sort((a, b) => new Date(b) - new Date(a))[0];
+	const recentEssay = thisUsersFiles.filter(
+		(f) => f?.metadata?.lastUpdated === mostRecentDate,
+	);
 
 	return (
 		<div className='page-container'>
@@ -35,37 +63,63 @@ function Dashboard({ rubrics, files }) {
 					<div id='dash-row' className='row align-items-center'>
 						<div id='dash-col' className='col-sm'>
 							<h5>Last Essay Graded</h5>
-							<p className='dash-stat'>filename</p>
+							<div className='stat-container'>
+								<p className='dash-stat'>
+									{recentEssay[0]?.metadata?.student !== ''
+										? recentEssay[0]?.filename +
+										  ' (' +
+										  recentEssay[0]?.metadata?.student +
+										  ')'
+										: recentEssay[0]?.filename +
+										  '\n(no student entered)'}
+								</p>
+							</div>
 						</div>
 						<div id='dash-col' className='col-sm'>
-							<h5>Avg. Time To Grade Each Essay</h5>
-							<p className='dash-stat'>0:00</p>
+							<h5>Average Time To Grade Each Essay</h5>
+							<div className='stat-container2'>
+								<p className='dash-stat'>
+									{(avgTime / 60).toFixed(2)} minutes
+								</p>
+							</div>
 						</div>
 						<div id='dash-col' className='col-sm'>
 							<h5>Average Essay Score</h5>
-							<p className='dash-stat'>0%</p>
+							<div className='stat-container'>
+								<p className='dash-stat'>
+									{avgGrade.toFixed(2)}
+								</p>
+							</div>
 						</div>
 					</div>
 					<div id='dash-row' className='row align-items-center'>
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Essays Graded</h5>
-							<p className='dash-stat'>0</p>
+							<div className='stat-container'>
+								<p className='dash-stat'>
+									{essaysGraded.length}
+								</p>
+							</div>
 						</div>
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Rubrics Created</h5>
-							<p className='dash-stat'>
-								{thisUsersRubrics.length === 0
-									? 0
-									: thisUsersRubrics.length}
-							</p>
+							<div className='stat-container'>
+								<p className='dash-stat'>
+									{thisUsersRubrics.length === 0
+										? 0
+										: thisUsersRubrics.length}
+								</p>
+							</div>
 						</div>
 						<div id='dash-col' className='col-sm'>
 							<h5>Total # of Essays Uploaded</h5>
-							<p className='dash-stat'>
-								{thisUsersFiles.length === 0
-									? 0
-									: thisUsersFiles.length}
-							</p>
+							<div className='stat-container'>
+								<p className='dash-stat'>
+									{thisUsersFiles.length === 0
+										? 0
+										: thisUsersFiles.length}
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>

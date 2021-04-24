@@ -43,7 +43,7 @@ const App = () => {
 					<Route exact path='/auth'>
 						<Auth />
 					</Route>
-					<Route exact path='/forgot'>
+					<Route exact path='/forgot/*'>
 						<Forgot />
 					</Route>
 					<Route exact path='/dashboard'>
