@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import GradingRubric from './GradingRubric';
 import { useHistory, useParams } from 'react-router-dom';
 import TimeMe from 'timeme.js';
+import { Viewer } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { Worker } from '@react-pdf-viewer/core';
 
 export default function Grade({
 	currentRubricId,
@@ -10,13 +15,8 @@ export default function Grade({
 	rubrics,
 	files,
 }) {
-	/*************************************/
-
-	//make essay appear in left section???
-
-	/*************************************/
-
 	//set variables
+	const defaultLayoutPluginInstance = defaultLayoutPlugin();
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const history = useHistory();
 	var { id } = useParams();
@@ -107,6 +107,33 @@ export default function Grade({
 	TimeMe.initialize({ currentPageName: 'grade', idleTimeoutInSeconds: 60 });
 	let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
 
+	//save file to local storage for display on page
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'http://localhost:5000/files/essay/' + currentFile[0]?._id);
+	xhr.overrideMimeType('application/pdf');
+	xhr.responseType = 'blob';
+	xhr.onload = function () {
+		if (xhr.status && xhr.status === 200) {
+			saveFile(xhr.response, 'selectedFile');
+		}
+	};
+	xhr.send();
+
+	function saveFile(file, key) {
+		var fileReader = new FileReader();
+		fileReader.onload = function (evt) {
+			var result = evt.target.result;
+			try {
+				localStorage.setItem(key, result);
+			} catch (e) {
+				console.log('Storage failed: ' + e);
+			}
+		};
+		fileReader.readAsDataURL(file);
+	}
+
+	const data = localStorage.getItem('selectedFile');
+
 	return (
 		<div className='page-container'>
 			<div className='grade-container'>
@@ -118,16 +145,18 @@ export default function Grade({
 						Student: <em>{currentFile[0]?.metadata?.student}</em>
 					</p>
 					<p className='grader-grade'>
-						Current Grade:{' '}
-						{grade || currentFile[0]?.metadata?.currentGrade}%
+						Current Score:{' '}
+						{grade || currentFile[0]?.metadata?.currentGrade}
 					</p>
 
-					<form className='grader-button'>
-						<button
-							type='submit'
-							className='btn btn btn-primary'
-							onClick={() => history.push('/library/*')}
-						>
+					<form
+						className='grader-button'
+						onSubmit={() => {
+							localStorage.setItem('selectedFile', '');
+							history.push('/library/*');
+						}}
+					>
+						<button type='submit' className='btn btn btn-primary'>
 							Go Back Without Saving
 						</button>
 					</form>
@@ -147,6 +176,7 @@ export default function Grade({
 								document.cookie = `notes = "Rubric: ${rubricData}, Custom Notes: ${notes}"; path=/`;
 								document.cookie = `timeSpentGrading = ${timeSpentOnPage}; path=/`;
 								document.cookie = `lastUpdated = ${new Date()}; path=/`;
+								localStorage.setItem('selectedFile', '');
 							}}
 						>
 							Submit Grade & Notes
@@ -157,15 +187,21 @@ export default function Grade({
 					<div className='row'>
 						<div id='view-col' className='col-8'>
 							<h5 className='viewer-title'>Essay</h5>
-							<div title='grade-frame' className='grade-frame'>
-								<iframe
-									title='doc-viewer'
-									src={
-										'https://localhost:5000/files/view/' +
-										currentFile[0]?._id
-									}
-									frameBorder='0'
-								></iframe>
+							<div className='grade-frame'>
+								{data ? (
+									<Worker workerUrl='https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js'>
+										<Viewer
+											fileUrl={data}
+											plugins={[
+												defaultLayoutPluginInstance,
+											]}
+										/>
+									</Worker>
+								) : (
+									<h5 className='view-instructions'>
+										Select rubric to begin grading.
+									</h5>
+								)}
 							</div>
 						</div>
 						<div id='grade-col' className='col-4'>

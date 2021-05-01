@@ -225,15 +225,6 @@ const Auth = () => {
 									>
 										Click here to create an account
 									</button>
-									<button
-										id='forgot-btn'
-										className='btn btn-primary'
-										onClick={() =>
-											history.push('/forgot/*')
-										}
-									>
-										Forgot Username or Password
-									</button>
 								</div>
 							</center>
 						</>

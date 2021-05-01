@@ -61,6 +61,9 @@ const Navbar = () => {
 							<Link to='/dashboard' className='nav-item nav-link'>
 								Dashboard
 							</Link>
+							<Link to='/library/*' className='nav-item nav-link'>
+								Library
+							</Link>
 							<Link
 								to='/create-edit-rubric/*'
 								className='nav-item nav-link'
@@ -69,9 +72,6 @@ const Navbar = () => {
 							</Link>
 							<Link to='/upload' className='nav-item nav-link'>
 								Upload Essays
-							</Link>
-							<Link to='/library/*' className='nav-item nav-link'>
-								Library
 							</Link>
 						</div>
 						<div className='navbar-nav ml-auto'>
@@ -95,7 +95,7 @@ const Navbar = () => {
 					>
 						<div className='navbar-nav'>
 							<Link to='/auth' className='nav-item nav-link'>
-								Login
+								Login or Sign Up
 							</Link>
 						</div>
 					</div>

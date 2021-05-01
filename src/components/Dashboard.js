@@ -65,7 +65,10 @@ function Dashboard({ rubrics, files }) {
 							<h5>Last Essay Graded</h5>
 							<div className='stat-container'>
 								<p className='dash-stat'>
-									{recentEssay[0]?.metadata?.student !== ''
+									{recentEssay[0] === undefined
+										? 'No grades yet'
+										: recentEssay[0]?.metadata?.student !==
+										  ''
 										? recentEssay[0]?.filename +
 										  ' (' +
 										  recentEssay[0]?.metadata?.student +

@@ -9,6 +9,9 @@ function Upload() {
 		<div className='page-container'>
 			<div className='upload-container'>
 				<h1 className='upload-heading'>File Upload</h1>
+				<p className='pdf-only'>
+					<em>(.pdf files only)</em>
+				</p>
 				<form
 					action='http://localhost:5000/files/upload'
 					method='POST'
@@ -16,10 +19,11 @@ function Upload() {
 				>
 					<div className='custom-file'>
 						<input
+							id='fileInput'
 							type='file'
-							name='file'
+							name='inputFile'
 							className='custom-file-input'
-							accept='application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .doc, .docx, .pages'
+							accept='application/pdf'
 							required
 							autoFocus
 							onChange={(e) => {

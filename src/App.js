@@ -10,7 +10,6 @@ import Upload from './components/Upload.js';
 import Grade from './components/Grade.js';
 import Home from './components/Home.js';
 import Footer from './components/Footer.js';
-import Forgot from './components/Forgot.js';
 import Auth from './components/Auth.js';
 import CreateRubric from './components/CreateRubric.js';
 import { getRubrics } from './actions/rubrics';
@@ -42,9 +41,6 @@ const App = () => {
 					</Route>
 					<Route exact path='/auth'>
 						<Auth />
-					</Route>
-					<Route exact path='/forgot/*'>
-						<Forgot />
 					</Route>
 					<Route exact path='/dashboard'>
 						<Dashboard rubrics={rubrics} files={files} />

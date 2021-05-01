@@ -276,6 +276,10 @@ body {
 	text-align: center;
 }
 
+.pdf-only {
+	text-align: center;
+}
+
 /*LIBRARY*/
 
 .library-container {
@@ -334,7 +338,16 @@ body {
 }
 
 #grader.container-fluid {
-	margin-bottom: 2rem;
+	margin-bottom: 7rem;
+}
+
+.grade-container {
+	margin-bottom: 1rem;
+}
+
+#zoom-out {
+	margin-left: 1rem;
+	margin-bottom: 1rem;
 }
 
 .grade-title-container {
@@ -351,6 +364,7 @@ body {
 	margin-left: 12px;
 	font-size: 20px;
 	font-family: 'Lora', sans-serif;
+	word-wrap: break-word;
 }
 
 .grader-button > button {
@@ -393,6 +407,7 @@ body {
 	width: 100%;
 	height: inherit;
 	border: solid 0.135rem var(--primary-light);
+	overflow: auto;
 }
 
 .grade-frame > iframe {
@@ -402,6 +417,12 @@ body {
 
 .table {
 	font-family: 'Lora', sans-serif;
+}
+
+.view-instructions {
+	font-family: 'Lora', sans-serif;
+	margin-top: 2rem;
+	text-align: center;
 }
 
 /*CREATE RUBRIC*/

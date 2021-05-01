@@ -56,9 +56,11 @@ function Library({
 									Date Created
 								</th>
 								<th className='file-head' scope='col'>
-									Title
+									<center>Title</center>
 								</th>
-								<th className='file-head' scope='col'></th>
+								<th className='file-head' scope='col'>
+									<center>Options</center>
+								</th>
 							</tr>
 						</thead>
 						{thisUsersRubrics.length < 1 ? (
@@ -90,7 +92,7 @@ function Library({
 												{date[0]}
 											</th>
 											<td className='filename'>
-												{rubric.title}
+												<center>{rubric.title}</center>
 											</td>
 											<td className='filename'>
 												<center>
@@ -144,15 +146,17 @@ function Library({
 									Date Uploaded
 								</th>
 								<th className='file-head' scope='col'>
-									File
+									<center>File</center>
 								</th>
 								<th className='file-head' scope='col'>
-									Student
+									<center>Student</center>
 								</th>
 								<th className='file-head' scope='col'>
-									Current Grade
+									<center>Current Score</center>
 								</th>
-								<th className='file-head' scope='col'></th>
+								<th className='file-head' scope='col'>
+									<center>Options</center>
+								</th>
 							</tr>
 						</thead>
 						{thisUsersFiles[0] === 'No files available' ? (
@@ -184,124 +188,129 @@ function Library({
 												{date[0]}
 											</th>
 											<td className='filename'>
-												<a
-													className='filename-link'
-													href={
-														'http://localhost:5000/files/essay/' +
-														file._id
-													}
-												>
-													Download: {file.filename}
-												</a>
+												<center>{file.filename}</center>
 											</td>
 											<td className='filename'>
-												<form
-													method='GET'
-													action={
-														'http://localhost:5000/files/student/' +
-														currentFileId
-													}
-												>
-													<input
-														type='text'
-														placeholder={
-															file.metadata
-																.student !== ''
-																? file.metadata
-																		.student
-																: 'Enter student name'
-														}
-														onChange={(e) => {
-															setCurrentFileId(
-																file._id,
-															);
-															setStudentName(
-																e.target.value,
-															);
-														}}
-													></input>
-													<button
-														type='submit'
-														id='view-edit-btn'
-														className='btn btn-primary'
-														onClick={() =>
-															(document.cookie = `student = ${studentName}; path=/`)
+												<center>
+													<form
+														method='GET'
+														action={
+															'http://localhost:5000/files/student/' +
+															currentFileId
 														}
 													>
-														Save
-													</button>
-												</form>
+														<input
+															type='text'
+															placeholder={
+																file.metadata
+																	.student !==
+																''
+																	? file
+																			.metadata
+																			.student
+																	: 'Enter student name'
+															}
+															onChange={(e) => {
+																setCurrentFileId(
+																	file._id,
+																);
+																setStudentName(
+																	e.target
+																		.value,
+																);
+															}}
+														></input>
+														<button
+															type='submit'
+															id='view-edit-btn'
+															className='btn btn-primary'
+															onClick={() =>
+																(document.cookie = `student = ${studentName}; path=/`)
+															}
+														>
+															Save
+														</button>
+													</form>
+												</center>
 											</td>
 											<td className='filename'>
-												{file.metadata.currentGrade ===
-												'Not yet graded.'
-													? 'Not yet graded'
-													: file.metadata
-															.currentGrade + '%'}
+												<center>
+													{file.metadata
+														.currentGrade ===
+													'Not yet graded.'
+														? 'Not yet graded'
+														: file.metadata
+																.currentGrade}
+												</center>
 											</td>
 											<td
 												className='file-options'
 												id='parent'
 											>
-												<form className='grade-delete'>
-													<button
-														onClick={() => {
+												<center>
+													<form
+														className='grade-delete'
+														onSubmit={() => {
 															setCurrentFileId(
 																file._id,
 															);
+
 															history.push(
 																'/grade/' +
 																	file._id,
 															);
 														}}
-														type='button'
-														id='view-edit-btn'
-														className='btn btn-primary'
 													>
-														Grade
-													</button>
-												</form>
-												<form className='grade-delete'>
-													<button
-														type='button'
-														className='btn btn-primary'
-														id='view-edit-btn'
-														data-toggle='collapse'
-														data-target={
-															'#collapseRow' +
-															file._id
+														<button
+															type='submit'
+															id='view-edit-btn'
+															className='btn btn-primary'
+														>
+															Grade
+														</button>
+													</form>
+													<form className='grade-delete'>
+														<button
+															type='button'
+															className='btn btn-primary'
+															id='view-edit-btn'
+															data-toggle='collapse'
+															data-target={
+																'#collapseRow' +
+																file._id
+															}
+															aria-expanded='false'
+															aria-controls={
+																'collapseRow' +
+																file._id
+															}
+															onClick={() => {
+																setExpanded(
+																	file._id,
+																);
+															}}
+														>
+															View Feedback
+														</button>
+													</form>
+													<form
+														className='grade-delete'
+														method='POST'
+														action={
+															'http://localhost:5000/files/' +
+															file._id +
+															'?_method=DELETE'
 														}
-														aria-expanded='false'
-														aria-controls={
-															'collapseRow' +
-															file._id
-														}
-														onClick={() => {
-															setExpanded(
-																file._id,
-															);
-														}}
 													>
-														View Feedback
-													</button>
-												</form>
-												<form
-													className='grade-delete'
-													method='POST'
-													action={
-														'http://localhost:5000/files/' +
-														file._id +
-														'?_method=DELETE'
-													}
-												>
-													<button
-														type='submit'
-														id='view-edit-btn'
-														className='btn btn-primary'
-													>
-														Delete
-													</button>
-												</form>
+														<button
+															type='submit'
+															id='view-edit-btn'
+															className='btn btn-primary'
+														>
+															Delete
+														</button>
+													</form>
+												</center>
 											</td>
 										</tr>
 										{file._id === expanded ? (
