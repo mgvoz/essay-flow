@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function Upload() {
 	//set variables + obtain signed-in user
 	const [fileName, setFileName] = useState('');
+	const [display, setDisplay] = useState('none');
 	const user = JSON.parse(localStorage.getItem('profile'));
 
 	return (
@@ -50,8 +51,7 @@ function Upload() {
 								document.cookie = `student = ""; path=/`;
 								document.cookie = `currentGrade = "Not yet graded."; path=/`;
 								document.cookie = `notes = []; path=/`;
-								fileName &&
-									alert('File uploaded successfully.');
+								fileName && setDisplay('block');
 							}}
 						/>
 					</center>
@@ -60,6 +60,14 @@ function Upload() {
 					All uploaded files can be found in your Library.
 				</p>
 			</div>
+			<center>
+				<div
+					className='alert alert-success'
+					style={{ display: display, maxWidth: '50vw' }}
+				>
+					File uploaded successfully!
+				</div>
+			</center>
 		</div>
 	);
 }
