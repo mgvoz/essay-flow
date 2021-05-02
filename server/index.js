@@ -22,6 +22,9 @@ app.use(cookieParser());
 
 app.use('/user', userRoutes);
 app.use('/rubrics', rubricRoutes);
+app.get('/', (req, res) => {
+	res.send('Hello');
+});
 
 const url = CONNECTION_URL;
 
