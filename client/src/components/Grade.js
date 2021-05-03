@@ -109,7 +109,7 @@ export default function Grade({
 
 	//save file to local storage for display on page
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'http://localhost:5000/files/essay/' + currentFile[0]?._id);
+	xhr.open('GET', 'https://essay-flow.herokuapp.com/files/essay/' + currentFile[0]?._id);
 	xhr.overrideMimeType('application/pdf');
 	xhr.responseType = 'blob';
 	xhr.onload = function () {
@@ -165,7 +165,7 @@ export default function Grade({
 						className='grader-button'
 						method='GET'
 						action={
-							'http://localhost:5000/files/grade/' + currentFileId
+							'https://essay-flow.herokuapp.com/files/grade/' + currentFileId
 						}
 					>
 						<button
