@@ -14,7 +14,7 @@ function Upload() {
 					<em>(.pdf files only)</em>
 				</p>
 				<form
-					action='http://localhost:5000/files/upload'
+					action='https://essay-flow.herokuapp.com/files/upload'
 					method='POST'
 					encType='multipart/form-data'
 				>
