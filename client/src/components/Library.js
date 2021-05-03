@@ -195,7 +195,7 @@ function Library({
 													<form
 														method='GET'
 														action={
-															'http://localhost:5000/files/student/' +
+															'https://essay-flow.herokuapp.com/files/student/' +
 															currentFileId
 														}
 													>
@@ -297,7 +297,7 @@ function Library({
 														className='grade-delete'
 														method='POST'
 														action={
-															'http://localhost:5000/files/' +
+															'https://essay-flow.herokuapp.com/files/' +
 															file._id +
 															'?_method=DELETE'
 														}
