@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
-function Upload() {
-	//set variables + obtain signed-in user
+function Upload({ userID }) {
+	//set variables
 	const [fileName, setFileName] = useState('');
 	const [display, setDisplay] = useState('none');
-	const user = JSON.parse(localStorage.getItem('profile'));
 
 	return (
 		<div className='page-container'>
@@ -14,9 +13,10 @@ function Upload() {
 					<em>(.pdf files only)</em>
 				</p>
 				<form
-					action='https://essay-flow.herokuapp.com/files/upload'
+					action={'https://essay-flow.xyz/files/upload/' + userID}
 					method='POST'
 					encType='multipart/form-data'
+					id='form-submit'
 				>
 					<div className='custom-file'>
 						<input
@@ -44,13 +44,6 @@ function Upload() {
 							className='btn btn-sm btn-primary'
 							id='js-upload-submit'
 							onClick={() => {
-								document.cookie = `userName = ${user.result.name}; path=/`;
-								document.cookie = `userId = ${
-									user.result._id || user.result.googleId
-								}; path=/`;
-								document.cookie = `student = ""; path=/`;
-								document.cookie = `currentGrade = "Not yet graded."; path=/`;
-								document.cookie = `notes = []; path=/`;
 								fileName && setDisplay('block');
 							}}
 						/>
