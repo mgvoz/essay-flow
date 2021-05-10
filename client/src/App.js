@@ -14,14 +14,20 @@ import Auth from './components/Auth.js';
 import CreateRubric from './components/CreateRubric.js';
 import { getRubrics } from './actions/rubrics';
 import { getFiles } from './actions/files';
+import { getFileData } from './actions/filedata';
 
 const App = () => {
+	const user = JSON.parse(localStorage.getItem('profile'));
 	const dispatch = useDispatch();
 	const rubrics = useSelector((state) => state.rubrics);
 	const files = useSelector((state) => state.files);
+	const fileData = useSelector((state) => state.filedata);
+
+	const userID = user?.result?._id || user?.result?.googleId;
 
 	const [currentRubricId, setCurrentRubricId] = useState(0);
 	const [currentFileId, setCurrentFileId] = useState(0);
+	const [currentFileDataId, setCurrentFileDataId] = useState(0);
 
 	useEffect(() => {
 		dispatch(getRubrics());
@@ -31,10 +37,14 @@ const App = () => {
 		dispatch(getFiles());
 	}, [currentFileId, dispatch]);
 
+	useEffect(() => {
+		dispatch(getFileData());
+	}, [currentFileDataId, dispatch]);
+
 	return (
 		<>
 			<BrowserRouter>
-				<Navbar />
+				<Navbar userID={userID} />
 				<Switch>
 					<Route exact path='/'>
 						<Home />
@@ -43,10 +53,14 @@ const App = () => {
 						<Auth />
 					</Route>
 					<Route exact path='/dashboard'>
-						<Dashboard rubrics={rubrics} files={files} />
+						<Dashboard
+							rubrics={rubrics}
+							files={files}
+							fileData={fileData}
+						/>
 					</Route>
-					<Route exact path='/upload'>
-						<Upload files={files} />
+					<Route exact path={`/upload/${userID}`}>
+						<Upload userID={userID} />
 					</Route>
 					<Route exact path='/create-edit-rubric/*'>
 						<CreateRubric
@@ -62,16 +76,16 @@ const App = () => {
 							setCurrentFileId={setCurrentFileId}
 							rubrics={rubrics}
 							files={files}
+							fileData={fileData}
 						/>
 					</Route>
 					<Route exact path='/grade/:id'>
 						<Grade
 							currentRubricId={currentRubricId}
 							setCurrentRubricId={setCurrentRubricId}
-							currentFileId={currentFileId}
-							setCurrentFileId={setCurrentFileId}
 							rubrics={rubrics}
 							files={files}
+							fileData={fileData}
 						/>
 					</Route>
 				</Switch>
