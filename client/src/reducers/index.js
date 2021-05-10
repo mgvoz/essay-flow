@@ -7,4 +7,5 @@ export default combineReducers({
 	rubrics,
 	auth,
 	files,
+	filedata,
 });
