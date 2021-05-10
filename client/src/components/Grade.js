@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import GradingRubric from './GradingRubric';
 import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import TimeMe from 'timeme.js';
 import { Viewer } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { Worker } from '@react-pdf-viewer/core';
+import { updateFileData } from '../actions/filedata';
 
 export default function Grade({
 	currentRubricId,
 	setCurrentRubricId,
-	currentFileId,
 	rubrics,
 	files,
+	fileData,
 }) {
 	//set variables
 	const defaultLayoutPluginInstance = defaultLayoutPlugin();
 	const user = JSON.parse(localStorage.getItem('profile'));
+	const dispatch = useDispatch();
 	const history = useHistory();
 	var { id } = useParams();
 	const [grade, setGrade] = useState(0);
@@ -40,12 +43,20 @@ export default function Grade({
 
 	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.googleId === file?.metadata?.userId ||
-			user?.result?._id === file?.metadata?.userId,
+			user?.result?.googleId === file?.userId ||
+			user?.result?._id === file?.userId,
+	);
+
+	//get only filedata for signed in user
+	const thisUsersFileData = fileData.filter(
+		(data) =>
+			user?.result?.googleId === data?.userId ||
+			user?.result?._id === data?.userId,
 	);
 
 	//get all data for current file selected with ID
 	var currentFile = thisUsersFiles.filter((f) => f._id === id);
+	var currentFileData = thisUsersFileData.filter((d) => d.fileId === id);
 
 	//show selections from rubric, add grade
 	const handleGrade = (c, r, col, row) => {
@@ -109,7 +120,7 @@ export default function Grade({
 
 	//save file to local storage for display on page
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://essay-flow.herokuapp.com/files/essay/' + currentFile[0]?._id);
+	xhr.open('GET', 'https://essay-flow.xyz/files/essay/' + id);
 	xhr.overrideMimeType('application/pdf');
 	xhr.responseType = 'blob';
 	xhr.onload = function () {
@@ -134,6 +145,23 @@ export default function Grade({
 
 	const data = localStorage.getItem('selectedFile');
 
+	//function to save grade and notes
+	const saveGradeAndNotes = () => {
+		const match = thisUsersFileData.filter((d) => d.fileId === id)[0];
+		if (match) {
+			dispatch(
+				updateFileData(match._id, {
+					...match,
+					currentGrade: grade,
+					notes: `Rubric: ${rubricData}, Custom Notes: ${notes}`,
+					timeSpentGrading: timeSpentOnPage,
+					lastUpdated: new Date(),
+				}),
+			);
+			history.push('/library/*');
+		}
+	};
+
 	return (
 		<div className='page-container'>
 			<div className='grade-container'>
@@ -142,11 +170,11 @@ export default function Grade({
 						Now Grading: <em>"{currentFile[0]?.filename}"</em>
 					</p>
 					<p className='grader-title'>
-						Student: <em>{currentFile[0]?.metadata?.student}</em>
+						Student: <em>{currentFileData[0]?.student}</em>
 					</p>
 					<p className='grader-grade'>
 						Current Score:{' '}
-						{grade || currentFile[0]?.metadata?.currentGrade}
+						{grade || currentFileData[0]?.currentGrade}
 					</p>
 
 					<form
@@ -163,19 +191,12 @@ export default function Grade({
 
 					<form
 						className='grader-button'
-						method='GET'
-						action={
-							'https://essay-flow.herokuapp.com/files/grade/' + currentFileId
-						}
+						onSubmit={saveGradeAndNotes}
 					>
 						<button
 							type='submit'
 							className='btn btn btn-primary'
 							onClick={() => {
-								document.cookie = `currentGrade = ${grade}; path=/`;
-								document.cookie = `notes = "Rubric: ${rubricData}, Custom Notes: ${notes}"; path=/`;
-								document.cookie = `timeSpentGrading = ${timeSpentOnPage}; path=/`;
-								document.cookie = `lastUpdated = ${new Date()}; path=/`;
 								localStorage.setItem('selectedFile', '');
 							}}
 						>
