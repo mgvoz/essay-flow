@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dataRoutes from './routes/filedata.js';
 import userRoutes from './routes/users.js';
 import rubricRoutes from './routes/rubrics.js';
 import fileRouter from './routes/files.js';
@@ -22,13 +23,11 @@ app.use(cookieParser());
 
 app.use('/user', userRoutes);
 app.use('/rubrics', rubricRoutes);
-app.get('/', (req, res) => {
-	res.send('Hello');
-});
+app.use('/filedata', dataRoutes);
 
 const url = CONNECTION_URL;
 
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 mongoose
 	.connect(url, {
@@ -36,7 +35,7 @@ mongoose
 		useUnifiedTopology: true,
 	})
 	.then(() =>
-		app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)),
+		app.listen(port, () => console.log(`Server running on port: ${port}`)),
 	)
 	.catch((error) => console.log(error.message));
 
@@ -52,11 +51,10 @@ const storage = new GridFsStorage({
 					return reject(err);
 				}
 				const filename = file.originalname;
-				//buf.toString('hex') + path.extname(file.originalname);
 				const fileInfo = {
 					filename: filename,
 					bucketName: 'uploads',
-					metadata: req.cookies,
+					metadata: req.params.userID,
 				};
 				resolve(fileInfo);
 			});
