@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { deleteRubric } from '../actions/rubrics';
+import {
+	createFileData,
+	updateFileData,
+	deleteFileData,
+} from '../actions/filedata';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +15,7 @@ function Library({
 	setCurrentFileId,
 	rubrics,
 	files,
+	fileData,
 }) {
 	//set variables
 	const dispatch = useDispatch();
@@ -33,15 +39,75 @@ function Library({
 
 	const thisUsersFiles = flatArr.filter(
 		(file) =>
-			user?.result?.googleId === file?.metadata?.userId ||
-			user?.result?._id === file?.metadata?.userId,
+			user?.result?.googleId === file?.metadata ||
+			user?.result?._id === file?.metadata,
 	);
 
-	//state for toggling collapse row for feedback
+	//access only signed-in user's file data
+	const thisUsersFileData = fileData.filter(
+		(data) =>
+			user?.result?.googleId === data?.userId ||
+			user?.result?._id === data?.userId,
+	);
+
+	//toggling collapse row for feedback
 	const [expanded, setExpanded] = useState(0);
+	const displayFeedback = thisUsersFileData.filter(
+		(d) => d.fileId === expanded,
+	)[0];
 
 	//get all data for current file selected with ID
-	const currentFile = thisUsersFiles.filter((f) => f._id === expanded);
+	const currentFile = thisUsersFiles.filter((f) => f._id === currentFileId);
+
+	//function to assign/update student name for a particular file
+	const saveName = () => {
+		const match = thisUsersFileData.filter(
+			(d) => d.fileId === currentFileId,
+		)[0];
+		if (match) {
+			dispatch(
+				updateFileData(match._id, {
+					...match,
+					student: studentName,
+				}),
+			);
+		} else {
+			dispatch(
+				createFileData({
+					student: studentName,
+					lastUpdated: new Date(),
+					userName: user?.result?.name,
+					fileId: currentFileId,
+					currentGrade: 'Not yet graded.',
+					notes: '',
+					timeSpentGrading: '',
+					filename: currentFile[0].filename,
+				}),
+			);
+		}
+	};
+
+	//function to control grade button
+	const gradeButton = (file) => {
+		const match = thisUsersFileData.filter(
+			(d) => d.fileId === currentFileId,
+		)[0];
+		if (match) {
+			history.push('/grade/' + file._id);
+		} else {
+			alert('Please enter student name before grading.');
+		}
+	};
+
+	//delete file data when file is deleted
+	const deleteExtraData = () => {
+		const match = thisUsersFileData.filter(
+			(d) => d.fileId === currentFileId,
+		)[0];
+		if (match) {
+			dispatch(deleteFileData(match._id));
+		}
+	};
 
 	return (
 		<div className='page-container'>
@@ -159,7 +225,8 @@ function Library({
 								</th>
 							</tr>
 						</thead>
-						{thisUsersFiles[0] === 'No files available' ? (
+						{thisUsersFiles[0] === 'No files available' ||
+						thisUsersFiles.length === 0 ? (
 							<>
 								<tbody>
 									<tr>
@@ -192,22 +259,22 @@ function Library({
 											</td>
 											<td className='filename'>
 												<center>
-													<form
-														method='GET'
-														action={
-															'https://essay-flow.herokuapp.com/files/student/' +
-															currentFileId
-														}
-													>
+													<form onSubmit={saveName}>
 														<input
 															type='text'
 															placeholder={
-																file.metadata
-																	.student !==
-																''
-																	? file
-																			.metadata
-																			.student
+																thisUsersFileData.find(
+																	(d) =>
+																		d.fileId ===
+																		file._id,
+																)
+																	? thisUsersFileData.find(
+																			(
+																				d,
+																			) =>
+																				d.fileId ===
+																				file._id,
+																	  ).student
 																	: 'Enter student name'
 															}
 															onChange={(e) => {
@@ -224,9 +291,6 @@ function Library({
 															type='submit'
 															id='view-edit-btn'
 															className='btn btn-primary'
-															onClick={() =>
-																(document.cookie = `student = ${studentName}; path=/`)
-															}
 														>
 															Save
 														</button>
@@ -235,12 +299,23 @@ function Library({
 											</td>
 											<td className='filename'>
 												<center>
-													{file.metadata
-														.currentGrade ===
-													'Not yet graded.'
+													{thisUsersFileData.find(
+														(d) =>
+															d.fileId ===
+															file._id,
+													)?.currentGrade ===
+														'Not yet graded.' ||
+													thisUsersFileData.find(
+														(d) =>
+															d.fileId ===
+															file._id,
+													) === undefined
 														? 'Not yet graded'
-														: file.metadata
-																.currentGrade}
+														: thisUsersFileData.find(
+																(d) =>
+																	d.fileId ===
+																	file._id,
+														  )?.currentGrade}
 												</center>
 											</td>
 											<td
@@ -250,14 +325,13 @@ function Library({
 												<center>
 													<form
 														className='grade-delete'
-														onSubmit={() => {
-															setCurrentFileId(
-																file._id,
-															);
-
-															history.push(
-																'/grade/' +
-																	file._id,
+														onSubmit={(e) => {
+															e.preventDefault();
+															setTimeout(
+																gradeButton(
+																	file,
+																),
+																3000,
 															);
 														}}
 													>
@@ -265,6 +339,16 @@ function Library({
 															type='submit'
 															id='view-edit-btn'
 															className='btn btn-primary'
+															onMouseEnter={() =>
+																setCurrentFileId(
+																	file._id,
+																)
+															}
+															onMouseLeave={() =>
+																setCurrentFileId(
+																	0,
+																)
+															}
 														>
 															Grade
 														</button>
@@ -297,7 +381,7 @@ function Library({
 														className='grade-delete'
 														method='POST'
 														action={
-															'https://essay-flow.herokuapp.com/files/' +
+															'https://essay-flow.xyz/files/' +
 															file._id +
 															'?_method=DELETE'
 														}
@@ -306,6 +390,19 @@ function Library({
 															type='submit'
 															id='view-edit-btn'
 															className='btn btn-primary'
+															onMouseEnter={() =>
+																setCurrentFileId(
+																	file._id,
+																)
+															}
+															onClick={
+																deleteExtraData
+															}
+															onMouseLeave={() =>
+																setCurrentFileId(
+																	0,
+																)
+															}
 														>
 															Delete
 														</button>
@@ -320,15 +417,12 @@ function Library({
 												colSpan='5'
 											>
 												<td colSpan='5'>
-													{currentFile[0] ===
-													undefined
-														? null
-														: currentFile[0]
-																.metadata
-																.notes === '[]'
+													{displayFeedback ===
+														undefined ||
+													displayFeedback?.notes ===
+														''
 														? 'No feedback entered yet.'
-														: currentFile[0]
-																.metadata.notes}
+														: displayFeedback.notes}
 												</td>
 											</tr>
 										) : null}
