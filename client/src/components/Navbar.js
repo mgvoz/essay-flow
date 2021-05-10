@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import decode from 'jwt-decode';
 import * as actionType from '../constants/actionTypes';
 
-const Navbar = () => {
+const Navbar = ({ userID }) => {
 	//set variables
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -70,7 +70,10 @@ const Navbar = () => {
 							>
 								Rubric Builder
 							</Link>
-							<Link to='/upload' className='nav-item nav-link'>
+							<Link
+								to={`/upload/${userID}`}
+								className='nav-item nav-link'
+							>
 								Upload Essays
 							</Link>
 						</div>
