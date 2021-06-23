@@ -64,9 +64,6 @@ function Dashboard({ rubrics, files, fileData }) {
 		(f) => f?.lastUpdated === mostRecentDate,
 	);
 
-	console.log(thisUsersFiles);
-	console.log(thisUsersFileData);
-
 	return (
 		<div className='page-container'>
 			<div className='dashboard-container'>
