@@ -31,7 +31,7 @@ export const fileRoutes = (upload) => {
 		upload.single('inputFile'),
 		(req, res) => {
 			res.redirect(
-				`https://essay-flow.netlify.app/upload/${req.params.userID}`,
+				'https://essay-flow.netlify.app/library/*',
 			);
 		},
 	);
