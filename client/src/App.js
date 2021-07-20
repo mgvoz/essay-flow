@@ -41,6 +41,33 @@ const App = () => {
 		dispatch(getFileData());
 	}, [currentFileDataId, dispatch]);
 
+	//access only signed-in user's rubrics
+	const thisUsersRubrics = rubrics.filter(
+		(rubric) =>
+			user?.result?.name === rubric?.name ||
+			user?.result?.name === rubric?.name,
+	);
+
+	//access only signed-in user's files
+	const fileArr = [];
+	for (let f in files) {
+		fileArr.push(files[f]);
+	}
+	const flatArr = fileArr.flat(2);
+
+	const thisUsersFiles = flatArr.filter(
+		(file) =>
+			user?.result?.googleId === file?.metadata ||
+			user?.result?._id === file?.metadata,
+	);
+
+	//access only signed-in user's file data
+	const thisUsersFileData = fileData.filter(
+		(data) =>
+			user?.result?.googleId === data?.userId ||
+			user?.result?._id === data?.userId,
+	);
+
 	return (
 		<>
 			<BrowserRouter>
@@ -54,9 +81,9 @@ const App = () => {
 					</Route>
 					<Route exact path='/dashboard'>
 						<Dashboard
-							rubrics={rubrics}
-							files={files}
-							fileData={fileData}
+							thisUsersRubrics={thisUsersRubrics}
+							thisUsersFiles={thisUsersFiles}
+							thisUsersFileData={thisUsersFileData}
 						/>
 					</Route>
 					<Route exact path={`/upload/${userID}`}>
@@ -74,18 +101,18 @@ const App = () => {
 							setCurrentRubricId={setCurrentRubricId}
 							currentFileId={currentFileId}
 							setCurrentFileId={setCurrentFileId}
-							rubrics={rubrics}
-							files={files}
-							fileData={fileData}
+							thisUsersRubrics={thisUsersRubrics}
+							thisUsersFiles={thisUsersFiles}
+							thisUsersFileData={thisUsersFileData}
 						/>
 					</Route>
 					<Route exact path='/grade/:id'>
 						<Grade
 							currentRubricId={currentRubricId}
 							setCurrentRubricId={setCurrentRubricId}
-							rubrics={rubrics}
-							files={files}
-							fileData={fileData}
+							thisUsersRubrics={thisUsersRubrics}
+							thisUsersFiles={thisUsersFiles}
+							thisUsersFileData={thisUsersFileData}
 						/>
 					</Route>
 				</Switch>
@@ -96,3 +123,4 @@ const App = () => {
 };
 
 export default App;
+
