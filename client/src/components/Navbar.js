@@ -13,6 +13,11 @@ const Navbar = ({ userID }) => {
 	const [user, setUser] = useState(
 		JSON.parse(localStorage.getItem('profile')),
 	);
+	const [width, setWidth] = useState(0);
+
+	useEffect(() => {
+		setTimeout(() => setWidth(window.innerWidth), 200);
+	}, []);
 
 	//dispatch logout function for logout button
 	const logout = () => {
@@ -97,9 +102,11 @@ const Navbar = ({ userID }) => {
 						id='navbarNavAltMarkup'
 					>
 						<div className='navbar-nav'>
-							<Link to='/auth' className='nav-item nav-link'>
-								Login or Sign Up
-							</Link>
+							{width >= 500 ? (
+								<Link to='/auth' className='nav-item nav-link'>
+									Login or Sign Up
+								</Link>
+							) : null}
 						</div>
 					</div>
 				)}
