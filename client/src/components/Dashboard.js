@@ -4,33 +4,6 @@ function Dashboard({ rubrics, files, fileData }) {
 	//set variables
 	const user = JSON.parse(localStorage.getItem('profile'));
 
-	//get only rubrics created by signed in user
-	const thisUsersRubrics = rubrics.filter(
-		(rubric) =>
-			user?.result?.name === rubric?.name ||
-			user?.result?.name === rubric?.name,
-	);
-
-	//get only files uploaded by signed in user
-	const fileArr = [];
-	for (let f in files) {
-		fileArr.push(files[f]);
-	}
-	const flatArr = fileArr.flat(2);
-
-	const thisUsersFiles = flatArr.filter(
-		(file) =>
-			user?.result?.googleId === file?.metadata ||
-			user?.result?._id === file?.metadata,
-	);
-
-	//get only filedata for signed in user
-	const thisUsersFileData = fileData.filter(
-		(data) =>
-			user?.result?.googleId === data?.userId ||
-			user?.result?._id === data?.userId,
-	);
-
 	//get # of essays graded
 	const essaysGraded = thisUsersFileData.filter(
 		(f) => f?.currentGrade !== 'Not yet graded.',
