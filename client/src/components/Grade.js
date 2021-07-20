@@ -27,33 +27,6 @@ export default function Grade({
 	const [notes, setNotes] = useState([]);
 	const rubricData = [];
 
-	//access only signed-in user's rubrics
-	const thisUsersRubrics = rubrics.filter(
-		(rubric) =>
-			user?.result?.name === rubric?.name ||
-			user?.result?.name === rubric?.name,
-	);
-
-	//access only signed-in user's files
-	const fileArr = [];
-	for (let f in files) {
-		fileArr.push(files[f]);
-	}
-	const flatArr = fileArr.flat(2);
-
-	const thisUsersFiles = flatArr.filter(
-		(file) =>
-			user?.result?.googleId === file?.userId ||
-			user?.result?._id === file?.userId,
-	);
-
-	//get only filedata for signed in user
-	const thisUsersFileData = fileData.filter(
-		(data) =>
-			user?.result?.googleId === data?.userId ||
-			user?.result?._id === data?.userId,
-	);
-
 	//get all data for current file selected with ID
 	var currentFile = thisUsersFiles.filter((f) => f._id === id);
 	var currentFileData = thisUsersFileData.filter((d) => d.fileId === id);
