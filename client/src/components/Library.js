@@ -13,42 +13,15 @@ function Library({
 	setCurrentRubricId,
 	currentFileId,
 	setCurrentFileId,
-	rubrics,
-	files,
-	fileData,
+	thisUsersFileData,
+	thisUsersFiles,
+	thisUsersRubrics,
 }) {
 	//set variables
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const [studentName, setStudentName] = useState('');
-
-	//access only signed-in user's rubrics
-	const thisUsersRubrics = rubrics.filter(
-		(rubric) =>
-			user?.result?.name === rubric?.name ||
-			user?.result?.name === rubric?.name,
-	);
-
-	//access only signed-in user's files
-	const fileArr = [];
-	for (let f in files) {
-		fileArr.push(files[f]);
-	}
-	const flatArr = fileArr.flat(2);
-
-	const thisUsersFiles = flatArr.filter(
-		(file) =>
-			user?.result?.googleId === file?.metadata ||
-			user?.result?._id === file?.metadata,
-	);
-
-	//access only signed-in user's file data
-	const thisUsersFileData = fileData.filter(
-		(data) =>
-			user?.result?.googleId === data?.userId ||
-			user?.result?._id === data?.userId,
-	);
 
 	//toggling collapse row for feedback
 	const [expanded, setExpanded] = useState(0);
@@ -77,6 +50,7 @@ function Library({
 					student: studentName,
 					lastUpdated: new Date(),
 					userName: user?.result?.name,
+					userId: user?.result?.googleId || user?.result?._id,
 					fileId: currentFileId,
 					currentGrade: 'Not yet graded.',
 					notes: '',
@@ -263,18 +237,15 @@ function Library({
 														<input
 															type='text'
 															placeholder={
-																thisUsersFileData.find(
-																	(d) =>
-																		d.fileId ===
-																		file._id,
-																)
+																thisUsersFileData.length >
+																0
 																	? thisUsersFileData.find(
 																			(
 																				d,
 																			) =>
 																				d.fileId ===
 																				file._id,
-																	  ).student
+																	  )?.student
 																	: 'Enter student name'
 															}
 															onChange={(e) => {
@@ -439,3 +410,4 @@ function Library({
 }
 
 export default Library;
+
