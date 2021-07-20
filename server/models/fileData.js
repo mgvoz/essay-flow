@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const fileDataSchema = new mongoose.Schema({
 	userName: { type: String, default: '' },
-	userId: String,
+	userId: { type: String, default: '' },
 	lastUpdated: { type: Date, default: new Date() },
 	fileId: { type: String, default: '' },
 	timeSpentGrading: { type: String, default: '' },
