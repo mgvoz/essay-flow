@@ -23,8 +23,6 @@ const App = () => {
 	const files = useSelector((state) => state.files);
 	const fileData = useSelector((state) => state.filedata);
 
-	const userID = user?.result?._id || user?.result?.googleId;
-
 	const [currentRubricId, setCurrentRubricId] = useState(0);
 	const [currentFileId, setCurrentFileId] = useState(0);
 	const [currentFileDataId, setCurrentFileDataId] = useState(0);
@@ -41,33 +39,6 @@ const App = () => {
 		dispatch(getFileData());
 	}, [currentFileDataId, dispatch]);
 
-	//access only signed-in user's rubrics
-	const thisUsersRubrics = rubrics.filter(
-		(rubric) =>
-			user?.result?.name === rubric?.name ||
-			user?.result?.name === rubric?.name,
-	);
-
-	//access only signed-in user's files
-	const fileArr = [];
-	for (let f in files) {
-		fileArr.push(files[f]);
-	}
-	const flatArr = fileArr.flat(2);
-
-	const thisUsersFiles = flatArr.filter(
-		(file) =>
-			user?.result?.googleId === file?.metadata ||
-			user?.result?._id === file?.metadata,
-	);
-
-	//access only signed-in user's file data
-	const thisUsersFileData = fileData.filter(
-		(data) =>
-			user?.result?.googleId === data?.userId ||
-			user?.result?._id === data?.userId,
-	);
-
 	return (
 		<>
 			<BrowserRouter>
@@ -81,13 +52,13 @@ const App = () => {
 					</Route>
 					<Route exact path='/dashboard'>
 						<Dashboard
-							thisUsersRubrics={thisUsersRubrics}
-							thisUsersFiles={thisUsersFiles}
-							thisUsersFileData={thisUsersFileData}
+							rubrics={rubrics}
+							files={files}
+							fileData={fileData}
 						/>
 					</Route>
-					<Route exact path={`/upload/${userID}`}>
-						<Upload userID={userID} />
+					<Route exact path={`/upload/${user?.result?.googleId || user?.result?._id}`}>
+						<Upload userID={user?.result?.googleId || user?.result?._id} />
 					</Route>
 					<Route exact path='/create-edit-rubric/*'>
 						<CreateRubric
@@ -101,18 +72,18 @@ const App = () => {
 							setCurrentRubricId={setCurrentRubricId}
 							currentFileId={currentFileId}
 							setCurrentFileId={setCurrentFileId}
-							thisUsersRubrics={thisUsersRubrics}
-							thisUsersFiles={thisUsersFiles}
-							thisUsersFileData={thisUsersFileData}
+							rubrics={rubrics}
+							files={files}
+							fileData={fileData}
 						/>
 					</Route>
 					<Route exact path='/grade/:id'>
 						<Grade
 							currentRubricId={currentRubricId}
 							setCurrentRubricId={setCurrentRubricId}
-							thisUsersRubrics={thisUsersRubrics}
-							thisUsersFiles={thisUsersFiles}
-							thisUsersFileData={thisUsersFileData}
+							rubrics={rubrics}
+							files={files}
+							fileData={fileData}
 						/>
 					</Route>
 				</Switch>
