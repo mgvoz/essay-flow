@@ -3,6 +3,33 @@ import React from 'react';
 function Dashboard({ rubrics, files, fileData }) {
 	//set variables
 	const user = JSON.parse(localStorage.getItem('profile'));
+	
+	//access only signed-in user's rubrics
+	const thisUsersRubrics = rubrics.filter(
+		(rubric) =>
+			user?.result?.googleId === rubric?.userId ||
+			user?.result?._id === rubric?.userId,
+	);
+
+	//access only signed-in user's files
+	const fileArr = [];
+	for (let f in files) {
+		fileArr.push(files[f]);
+	}
+	const flatArr = fileArr.flat(2);
+
+	const thisUsersFiles = flatArr.filter(
+		(file) =>
+			user?.result?.googleId === file?.metadata ||
+			user?.result?._id === file?.metadata,
+	);
+
+	//access only signed-in user's file data
+	const thisUsersFileData = fileData.filter(
+		(data) =>
+			user?.result?.googleId === data?.userId ||
+			user?.result?._id === data?.userId,
+	);
 
 	//get # of essays graded
 	const essaysGraded = thisUsersFileData.filter(
